@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Dashboard - GeekOnsites</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-color, #1a1a1a);
+            color: var(--text-color, #e0e0e0);
+            min-height: 100vh;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #121212;
+            border-right: 1px solid #2a2a2a;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #2a2a2a;
+            text-align: center;
+        }
+        
+        .sidebar-header h2 {
+            color: #d4af37;
+            font-size: 1.3rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .sidebar-header p {
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        
+        .agent-info {
+            padding: 1.5rem;
+            border-bottom: 1px solid #2a2a2a;
+            text-align: center;
+        }
+        
+        .agent-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37 0%, #b78d3f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: #1a1a1a;
+        }
+        
+        .agent-name {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+        
+        .agent-id {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        
+        .nav-menu {
+            list-style: none;
+            padding: 1rem 0;
+        }
+        
+        .nav-menu li {
+            margin: 0.25rem 0;
+        }
+        
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+            border-right: 3px solid #d4af37;
+        }
+        
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #2a2a2a;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        .btn-logout {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-logout:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 2rem;
+            background: #0a0a0a;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            color: #fff;
+            font-size: 1.8rem;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn-refresh {
+            padding: 0.625rem 1rem;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            color: #e0e0e0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-refresh:hover {
+            background: #3a3a3a;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            border-color: #d4af37;
+            transform: translateY(-2px);
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .stat-icon.pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .stat-icon.progress { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+        .stat-icon.completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .stat-icon.total { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        /* Calls Section */
+        .section {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 0.75rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-header h2 {
+            color: #fff;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .badge-progress { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+        .badge-completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        
+        .calls-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .call-item {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #2a2a2a;
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .call-item:last-child {
+            border-bottom: none;
+        }
+        
+        .call-info h4 {
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .call-info p {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        
+        .call-priority {
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .priority-high { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .priority-medium { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .priority-low { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        
+        .call-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-action {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-start {
+            background: #60a5fa;
+            color: #fff;
+        }
+        
+        .btn-complete {
+            background: #10b981;
+            color: #fff;
+        }
+        
+        .btn-view {
+            background: #2a2a2a;
+            color: #e0e0e0;
+        }
+        
+        .btn-action:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            color: #fff;
+        }
+        
+        .btn-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            color: #fff;
+            border-radius: 0.5rem;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-check input {
+            width: auto;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .btn-cancel {
+            padding: 0.625rem 1.25rem;
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #94a3b8;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .btn-save {
+            padding: 0.625rem 1.25rem;
+            background: #d4af37;
+            border: none;
+            color: #1a1a1a;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #10b981;
+            display: block;
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-headset"></i> GeekOnsites</h2>
+                <p>Call Management</p>
+            </div>
+            
+            <div class="agent-info">
+                <div class="agent-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="agent-name" id="agentName">Loading...</div>
+                <div class="agent-id" id="agentId">Loading...</div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#" class="active" onclick="showSection('dashboard')">
+                    <i class="fas fa-home"></i> Dashboard
+                </a></li>
+                <li><a href="#" onclick="showSection('pending')">
+                    <i class="fas fa-clock"></i> Pending Calls
+                </a></li>
+                <li><a href="#" onclick="showSection('progress')">
+                    <i class="fas fa-spinner"></i> In Progress
+                </a></li>
+                <li><a href="#" onclick="showSection('completed')">
+                    <i class="fas fa-check-circle"></i> Completed
+                </a></li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div id="alertBox" class="alert"></div>
+            
+            <div class="page-header">
+                <h1>Agent Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn-refresh" onclick="loadDashboard()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="pendingCount">0</div>
+                    <div class="stat-label">Pending Calls</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon progress">
+                            <i class="fas fa-spinner"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="progressCount">0</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon completed">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="completedCount">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon total">
+                            <i class="fas fa-list"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="totalCount">0</div>
+                    <div class="stat-label">Total Calls</div>
+                </div>
+            </div>
+            
+            <!-- Pending Calls -->
+            <div class="section" id="pendingSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-clock"></i> Pending Calls 
+                        <span class="badge badge-pending" id="pendingBadge">0</span>
+                    </h2>
+                </div>
+                <div class="calls-list" id="pendingCallsList">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No pending calls</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- In Progress Calls -->
+            <div class="section" id="progressSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-spinner"></i> In Progress 
+                        <span class="badge badge-progress" id="progressBadge">0</span>
+                    </h2>
+                </div>
+                <div class="calls-list" id="progressCallsList">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No calls in progress</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Completed Calls -->
+            <div class="section" id="completedSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-check-circle"></i> Completed 
+                        <span class="badge badge-completed" id="completedBadge">0</span>
+                    </h2>
+                </div>
+                <div class="calls-list" id="completedCallsList">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No completed calls</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Complete Call Modal -->
+    <div class="modal" id="completeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Complete Call</h3>
+                <button class="btn-close" onclick="closeModal('completeModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="completeCallId">
+                <div class="form-group">
+                    <label for="resolution">Resolution Summary</label>
+                    <textarea id="resolution" placeholder="Describe how the issue was resolved..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="outcome">Outcome</label>
+                    <select id="outcome">
+                        <option value="RESOLVED">Issue Resolved</option>
+                        <option value="PARTIALLY_RESOLVED">Partially Resolved</option>
+                        <option value="ESCALATED">Escalated</option>
+                        <option value="NO_RESOLUTION">No Resolution Required</option>
+                    </select>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="followUpRequired">
+                    <label for="followUpRequired">Follow-up Required</label>
+                </div>
+                <div class="form-group" id="followUpNotesGroup" style="display: none;">
+                    <label for="followUpNotes">Follow-up Notes</label>
+                    <textarea id="followUpNotes" placeholder="Enter follow-up details..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('completeModal')">Cancel</button>
+                <button class="btn-save" onclick="submitComplete()">Complete Call</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:8080/api';
+        let currentToken = localStorage.getItem('agentToken');
+        let agentInfo = JSON.parse(localStorage.getItem('agentInfo') || '{}');
+        
+        // Check authentication
+        if (!currentToken) {
+            window.location.href = 'agent-login.html';
+        }
+        
+        // Set agent info
+        document.getElementById('agentName').textContent = 
+            agentInfo.firstName + ' ' + agentInfo.lastName || 'Unknown';
+        document.getElementById('agentId').textContent = agentInfo.username || 'Unknown';
+        
+        async function loadDashboard() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/agent/dashboard`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateDashboard(data.data);
+                } else {
+                    showAlert(data.message || 'Failed to load dashboard', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error. Please refresh.', 'error');
+            }
+        }
+        
+        function updateDashboard(data) {
+            const stats = data.stats;
+            
+            // Update stats
+            document.getElementById('pendingCount').textContent = stats.pendingCalls || 0;
+            document.getElementById('progressCount').textContent = stats.inProgressCalls || 0;
+            document.getElementById('completedCount').textContent = stats.completedCalls || 0;
+            document.getElementById('totalCount').textContent = stats.totalCalls || 0;
+            
+            document.getElementById('pendingBadge').textContent = stats.pendingCalls || 0;
+            document.getElementById('progressBadge').textContent = stats.inProgressCalls || 0;
+            document.getElementById('completedBadge').textContent = stats.completedCalls || 0;
+            
+            // Update lists
+            renderCallsList('pendingCallsList', data.pendingCalls || [], 'pending');
+            renderCallsList('progressCallsList', data.inProgressCalls || [], 'progress');
+            renderCallsList('completedCallsList', data.completedCalls || [], 'completed');
+        }
+        
+        function renderCallsList(containerId, calls, type) {
+            const container = document.getElementById(containerId);
+            
+            if (calls.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No ${type} calls</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = calls.map(call => `
+                <div class="call-item">
+                    <div class="call-info">
+                        <h4>${call.customerName}</h4>
+                        <p>${call.customerPhone} | ${call.issueDescription || 'No description'}</p>
+                        <p style="font-size: 0.75rem; margin-top: 0.25rem;">
+                            Call ID: ${call.callId} | Created: ${new Date(call.createdAt).toLocaleDateString()}
+                        </p>
+                    </div>
+                    <span class="call-priority priority-${(call.priority || 'medium').toLowerCase()}">
+                        ${call.priority || 'MEDIUM'}
+                    </span>
+                    <div class="call-actions">
+                        ${type === 'pending' ? `
+                            <button class="btn-action btn-start" onclick="startCall('${call.callId}')">
+                                <i class="fas fa-play"></i> Start
+                            </button>
+                        ` : ''}
+                        ${type === 'progress' ? `
+                            <button class="btn-action btn-complete" onclick="openCompleteModal('${call.callId}')">
+                                <i class="fas fa-check"></i> Complete
+                            </button>
+                        ` : ''}
+                        <button class="btn-action btn-view" onclick="viewCall('${call.callId}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        async function startCall(callId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/calls/${callId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify({ status: 'IN_PROGRESS' })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('Call started successfully', 'success');
+                    loadDashboard();
+                } else {
+                    showAlert(data.message || 'Failed to start call', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error', 'error');
+            }
+        }
+        
+        function openCompleteModal(callId) {
+            document.getElementById('completeCallId').value = callId;
+            document.getElementById('completeModal').classList.add('active');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        
+        async function submitComplete() {
+            const callId = document.getElementById('completeCallId').value;
+            const resolution = document.getElementById('resolution').value;
+            const outcome = document.getElementById('outcome').value;
+            const followUpRequired = document.getElementById('followUpRequired').checked;
+            const followUpNotes = document.getElementById('followUpNotes').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/calls/${callId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify({
+                        status: 'COMPLETED',
+                        resolution,
+                        outcome,
+                        followUpRequired,
+                        followUpNotes
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    closeModal('completeModal');
+                    showAlert('Call completed successfully', 'success');
+                    loadDashboard();
+                } else {
+                    showAlert(data.message || 'Failed to complete call', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error', 'error');
+            }
+        }
+        
+        document.getElementById('followUpRequired').addEventListener('change', function() {
+            document.getElementById('followUpNotesGroup').style.display = 
+                this.checked ? 'block' : 'none';
+        });
+        
+        function viewCall(callId) {
+            alert('Call details: ' + callId);
+        }
+        
+        function logout() {
+            localStorage.removeItem('agentToken');
+            localStorage.removeItem('agentInfo');
+            window.location.href = 'agent-login.html';
+        }
+        
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.className = `alert alert-${type}`;
+            alertBox.textContent = message;
+            alertBox.style.display = 'block';
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showSection(section) {
+            // Update active nav
+            document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Scroll to section
+            const sectionMap = {
+                'dashboard': 0,
+                'pending': 'pendingSection',
+                'progress': 'progressSection',
+                'completed': 'completedSection'
+            };
+            
+            if (section === 'dashboard') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                document.getElementById(sectionMap[section]).scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Load dashboard on page load
+        loadDashboard();
+    </script>
+</body>
+</html>
