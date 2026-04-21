@@ -775,7 +775,7 @@
     </div>
     
     <script>
-        const API_BASE_URL = 'http://localhost:8080/api';
+        const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
         let currentToken = localStorage.getItem('adminToken');
         let adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}');
         let currentTab = 'dashboard';
@@ -857,21 +857,40 @@
         
         async function loadCalls(pendingOnly = false) {
             try {
-                const url = pendingOnly ? 
-                    `${API_BASE_URL}/calls/pending` : 
-                    `${API_BASE_URL}/calls/all`;
+                // Use tickets endpoint instead of calls
+                const url = `${API_BASE_URL}/tickets`;
                 
                 const response = await fetch(url, {
                     headers: { 'Authorization': `Bearer ${currentToken}` }
                 });
                 
                 const data = await response.json();
+                console.log('Tickets data:', data);
                 
                 if (data.success) {
-                    renderCallsTable(data.data || []);
+                    let tickets = data.data || [];
+                    // Filter pending tickets if needed
+                    if (pendingOnly) {
+                        tickets = tickets.filter(t => t.status === 'OPEN' || t.status === 'PENDING');
+                    }
+                    renderCallsTable(tickets);
+                } else {
+                    console.error('Failed to load tickets:', data.message);
+                    document.getElementById('tableContent').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Error loading tickets: ${data.message}</p>
+                        </div>
+                    `;
                 }
             } catch (error) {
-                console.error('Error loading calls:', error);
+                console.error('Error loading tickets:', error);
+                document.getElementById('tableContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error loading tickets. Please try again.</p>
+                    </div>
+                `;
             }
         }
         
