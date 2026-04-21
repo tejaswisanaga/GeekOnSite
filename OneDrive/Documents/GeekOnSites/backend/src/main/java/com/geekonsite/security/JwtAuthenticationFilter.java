@@ -32,10 +32,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response, 
                                     FilterChain filterChain) throws ServletException, IOException {
         String path = request.getRequestURI();
+        String method = request.getMethod();
+        
+        log.info("JWT Filter: {} {}", method, path);
         
         // Skip JWT validation for public endpoints
         if (path.startsWith("/api/auth/") || path.startsWith("/api/public/") || 
             path.equals("/api/tickets") || path.startsWith("/api/tickets/phone/")) {
+            log.info("JWT Filter: Skipping public endpoint {}", path);
             filterChain.doFilter(request, response);
             return;
         }
@@ -57,6 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.error("Cannot set user authentication: {}", e.getMessage());
         }
         
+        log.info("JWT Filter: Continuing chain for {}", path);
         filterChain.doFilter(request, response);
     }
     
