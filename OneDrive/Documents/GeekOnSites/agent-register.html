@@ -151,8 +151,15 @@
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
+            const fullName = document.getElementById('fullName').value;
+            const nameParts = fullName.split(' ');
+            const firstName = nameParts[0] || fullName;
+            const lastName = nameParts.slice(1).join(' ') || 'N/A';
+            
             const formData = {
-                fullName: document.getElementById('fullName').value,
+                agentId: 'AGT' + Date.now(),
+                firstName: firstName,
+                lastName: lastName,
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
                 password: document.getElementById('password').value,
