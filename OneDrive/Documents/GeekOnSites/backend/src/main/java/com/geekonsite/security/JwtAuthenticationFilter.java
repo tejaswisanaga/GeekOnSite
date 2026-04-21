@@ -31,6 +31,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, 
                                     HttpServletResponse response, 
                                     FilterChain filterChain) throws ServletException, IOException {
+        String path = request.getRequestURI();
+        
+        // Skip JWT validation for public endpoints
+        if (path.startsWith("/api/auth/") || path.startsWith("/api/public/") || 
+            path.equals("/api/tickets") || path.startsWith("/api/tickets/phone/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         try {
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
