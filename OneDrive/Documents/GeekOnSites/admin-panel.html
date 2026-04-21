@@ -912,10 +912,10 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Call ID</th>
+                            <th>Ticket #</th>
                             <th>Customer</th>
                             <th>Status</th>
-                            <th>Priority</th>
+                            <th>Support Level</th>
                             <th>Agent</th>
                             <th>Created</th>
                             <th>Actions</th>
@@ -925,38 +925,47 @@
             `;
             
             calls.forEach(call => {
+                // Map ticket status to badge classes
                 const statusClass = {
-                    'PENDING': 'badge-pending',
+                    'OPEN': 'badge-pending',
                     'IN_PROGRESS': 'badge-progress',
-                    'COMPLETED': 'badge-completed'
+                    'RESOLVED': 'badge-completed',
+                    'CLOSED': 'badge-completed',
+                    'ESCALATED': 'badge-rejected',
+                    'WAITING_CUSTOMER': 'badge-pending'
                 }[call.status] || 'badge-pending';
                 
-                const priorityClass = {
-                    'HIGH': 'badge-rejected',
-                    'MEDIUM': 'badge-pending',
-                    'LOW': 'badge-verified'
-                }[call.priority] || 'badge-pending';
+                // Map supportLevel to priority display
+                const priorityMap = {
+                    'L1_FIRST_LINE': 'L1 - Basic',
+                    'L2_SECOND_LINE': 'L2 - Advanced',
+                    'L3_SPECIALIST': 'L3 - Specialist'
+                };
+                const priorityDisplay = priorityMap[call.supportLevel] || call.supportLevel || 'L1';
+                
+                // Use ticketNumber instead of callId
+                const ticketNum = call.ticketNumber || call.callId || call.id;
                 
                 html += `
                     <tr>
-                        <td>${call.callId}</td>
+                        <td>${ticketNum}</td>
                         <td>
-                            ${call.customerName}<br>
-                            <small>${call.customerPhone}</small>
+                            ${call.customerName || 'N/A'}<br>
+                            <small>${call.customerPhone || 'N/A'}</small>
                         </td>
-                        <td><span class="badge ${statusClass}">${call.status}</span></td>
-                        <td><span class="badge ${priorityClass}">${call.priority}</span></td>
-                        <td>${call.agentName || 'Unassigned'}</td>
-                        <td>${new Date(call.createdAt).toLocaleDateString()}</td>
+                        <td><span class="badge ${statusClass}">${call.status || 'OPEN'}</span></td>
+                        <td><span class="badge ${statusClass}">${priorityDisplay}</span></td>
+                        <td>${call.assignedToName || call.assignedTo || 'Unassigned'}</td>
+                        <td>${call.createdAt ? new Date(call.createdAt).toLocaleDateString() : 'N/A'}</td>
                         <td>
                             <div class="table-actions">
-                                ${call.status === 'PENDING' ? `
-                                    <button class="btn-table btn-assign" onclick="openAssignModal('${call.callId}')">
+                                ${call.status === 'OPEN' || call.status === 'PENDING' ? `
+                                    <button class="btn-table btn-assign" onclick="openAssignModal('${ticketNum}')">
                                         Assign
                                     </button>
                                 ` : ''}
-                                <button class="btn-table btn-delete" onclick="deleteCall('${call.callId}')">
-                                    <i class="fas fa-trash"></i>
+                                <button class="btn-table btn-view" onclick="viewTicket('${ticketNum}')">
+                                    <i class="fas fa-eye"></i>
                                 </button>
                             </div>
                         </td>
@@ -1180,6 +1189,31 @@
             
             html += '</tbody></table>';
             document.getElementById('tableContent').innerHTML = html;
+        }
+        
+        function viewTicket(ticketNumber) {
+            // Find the ticket in the current data
+            fetch(`${API_BASE_URL}/tickets/${ticketNumber}`, {
+                headers: { 'Authorization': `Bearer ${currentToken}` }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const ticket = data.data;
+                    const details = `
+Ticket Number: ${ticket.ticketNumber}
+Customer: ${ticket.customerName}
+Phone: ${ticket.customerPhone}
+Email: ${ticket.customerEmail}
+Status: ${ticket.status}
+Category: ${ticket.category}
+Issue: ${ticket.issueDescription}
+Created: ${new Date(ticket.createdAt).toLocaleString()}
+                    `;
+                    alert(details);
+                }
+            })
+            .catch(error => console.error('Error viewing ticket:', error));
         }
         
         function openAssignModal(callId) {
