@@ -77,6 +77,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth -> 
                 auth
                     .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                     .requestMatchers("/api/public/**").permitAll()
                     .requestMatchers("/api/support/call/initiate").permitAll()
                     .requestMatchers("/api/support/ivr/options").permitAll()
