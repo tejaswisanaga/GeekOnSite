@@ -177,12 +177,14 @@
                 });
                 
                 const data = await response.json();
+                console.log('Response:', data);
                 
                 if (data.success) {
-                    alert('Registration successful! Agent ID: ' + data.data.agentId);
+                    const agentId = data.data?.agentId || data.data?.id || 'Generated';
+                    alert('Registration successful! Agent ID: ' + agentId);
                     window.location.href = 'agent-login.html';
                 } else {
-                    alert('Registration failed: ' + data.message);
+                    alert('Registration failed: ' + (data.message || 'Unknown error'));
                 }
             } catch (error) {
                 console.error('Error:', error);
