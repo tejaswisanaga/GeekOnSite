@@ -183,9 +183,14 @@
     <script>
         const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
         
+        console.log('Script loaded');
         document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        console.log('DOM loaded');
+        const form = document.getElementById('loginForm');
+        console.log('Form found:', form);
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            console.log('Form submitted');
             
             const formData = {
                 usernameOrEmail: document.getElementById('username').value,
@@ -202,6 +207,7 @@
                 });
                 
                 const data = await response.json();
+                console.log('API response:', data);
                 
                 if (data.success) {
                     localStorage.setItem('adminToken', data.data.token);
