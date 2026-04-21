@@ -248,8 +248,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
-                        alert('There was an error sending your message. Please try again or contact us directly.');
+                        console.error('Network Error:', error);
+                        console.error('Error details:', error.message);
+                        alert('There was an error sending your message. Error: ' + error.message);
                     });
                 });
             }
