@@ -181,8 +181,9 @@
     </div>
     
     <script>
-        const API_BASE_URL = 'http://localhost:8080/api';
+        const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
         
+        document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -215,6 +216,7 @@
             } catch (error) {
                 showAlert('Network error. Please try again.', 'error');
             }
+        });
         });
         
         function showAlert(message, type) {
