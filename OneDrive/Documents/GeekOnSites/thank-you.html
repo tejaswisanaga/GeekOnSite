@@ -110,7 +110,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- Scripts -->
     <script>
         // Set current year
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+        const yearElement = document.getElementById('current-year');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
         
         // Open Chat Function
             function openChat() {
