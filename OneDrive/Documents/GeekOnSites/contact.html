@@ -213,29 +213,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         return;
                     }
                     
-                    // Submit form data to Formspree
-                    const formData = new FormData();
-                    formData.append('name', name);
-                    formData.append('email', email);
-                    formData.append('phone', phone);
-                    formData.append('service', service);
-                    formData.append('message', message);
-                    formData.append('_subject', 'New Lead from GeekOnSites Website');
-                    formData.append('_next', window.location.origin + '/thank-you.html');
+                    // Submit form data to YOUR backend API
+                    const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
                     
-                    fetch('https://formspree.io/f/xlgpnkvj', {
+                    const ticketData = {
+                        customerName: name,
+                        customerEmail: email,
+                        customerPhone: phone,
+                        issueDescription: `Service: ${service}\n\nMessage: ${message}`,
+                        category: service.toUpperCase() || 'GENERAL',
+                        source: 'Website Contact Form'
+                    };
+                    
+                    fetch(`${API_BASE_URL}/tickets`, {
                         method: 'POST',
-                        body: formData,
                         headers: {
-                            'Accept': 'application/json'
-                        }
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(ticketData)
                     })
-                    .then(response => {
-                        if (response.ok) {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
                             // Success - redirect to thank you page
                             window.location.href = 'thank-you.html';
                         } else {
-                            throw new Error('Form submission failed');
+                            throw new Error(data.message || 'Ticket creation failed');
                         }
                     })
                     .catch(error => {
