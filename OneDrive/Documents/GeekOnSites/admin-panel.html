@@ -401,9 +401,14 @@
         async function validateToken() {
             try {
                 console.log('Validating admin token...');
+                console.log('Current token from localStorage:', currentToken);
+                console.log('Token length:', currentToken ? currentToken.length : 'No token');
+                
                 const response = await fetch(`${API_BASE_URL}/admin/dashboard`, {
                     headers: { 'Authorization': `Bearer ${currentToken}` }
                 });
+                
+                console.log('Token validation response status:', response.status);
                 
                 if (response.status === 403 || response.status === 401) {
                     console.log('Token invalid, clearing and redirecting to login');

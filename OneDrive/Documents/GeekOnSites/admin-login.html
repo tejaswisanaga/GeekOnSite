@@ -181,7 +181,7 @@
     </div>
     
     <script>
-        const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
+        const API_BASE_URL = 'https://gos-t3xb.onrender.com/api';
         
         console.log('Script loaded');
         document.addEventListener('DOMContentLoaded', function() {
@@ -210,8 +210,11 @@
                 console.log('API response:', data);
                 
                 if (data.success) {
+                    console.log('Login response data:', data);
+                    console.log('Token being stored:', data.data.token);
                     localStorage.setItem('adminToken', data.data.token);
                     localStorage.setItem('adminInfo', JSON.stringify(data.data));
+                    console.log('Token stored in localStorage:', localStorage.getItem('adminToken'));
                     showAlert('Login successful! Redirecting...', 'success');
                     setTimeout(() => {
                         window.location.href = 'admin-panel.html';
