@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
             min-height: 100vh;
         }
 
@@ -26,27 +26,28 @@
         /* Sidebar */
         .sidebar {
             width: 250px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             backdrop-filter: blur(10px);
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            border: 1px solid #d4af37;
         }
 
         .logo {
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #d4af37;
         }
 
         .logo h2 {
-            color: #333;
+            color: #ffffff;
             font-size: 24px;
             margin-bottom: 5px;
         }
 
         .logo p {
-            color: #666;
+            color: #d4af37;
             font-size: 14px;
         }
 
@@ -63,14 +64,14 @@
             align-items: center;
             padding: 12px 15px;
             text-decoration: none;
-            color: #333;
+            color: #ffffff;
             border-radius: 8px;
             transition: all 0.3s ease;
         }
 
         .nav-menu a:hover,
         .nav-menu a.active {
-            background: #667eea;
+            background: #d4af37;
             color: white;
         }
 
@@ -86,7 +87,7 @@
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 20px 30px;
@@ -95,10 +96,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid #d4af37;
         }
 
         .header h1 {
-            color: #333;
+            color: #ffffff;
             font-size: 28px;
         }
 
@@ -118,20 +120,24 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            border: 1px solid #d4af37;
         }
 
         .btn-primary {
-            background: #667eea;
+            background: linear-gradient(135deg, #d4af37 0%, #f9f0a0 50%, #d4af37 100%);
             color: white;
         }
 
         .btn-primary:hover {
-            background: #5a6fd8;
+            background: linear-gradient(135deg, #b78d3f 0%, #f9f0a0 50%, #b78d3f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
         }
 
         .btn-secondary {
             background: #6c757d;
             color: white;
+            border: 1px solid #6c757d;
         }
 
         .btn-secondary:hover {
@@ -141,6 +147,7 @@
         .btn-danger {
             background: #dc3545;
             color: white;
+            border: 1px solid #dc3545;
         }
 
         .btn-danger:hover {
@@ -149,11 +156,12 @@
 
         /* Content Area */
         .content {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(26, 26, 26, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #d4af37;
         }
 
         /* Stats Cards */
@@ -287,6 +295,95 @@
             margin-bottom: 15px;
             color: #ccc;
         }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid #d4af37;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .close {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .close:hover {
+            color: #d4af37;
+        }
+
+        .modal-body {
+            color: #ffffff;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+            color: #d4af37;
+        }
+
+        .modal-body .form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal-body label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .modal-body input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d4af37;
+            border-radius: 8px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .modal-body input:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
     </style>
 </head>
 <body>
@@ -324,6 +421,35 @@
                 <div id="alert" class="alert"></div>
                 <div id="contentArea">
                     <!-- Content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Agent Modal -->
+    <div id="assignModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Assign Agent to Ticket</h3>
+                <span class="close" onclick="closeAssignModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p><strong>Ticket #:</strong> <span id="modalTicketNumber"></span></p>
+                <div class="form-group">
+                    <label for="agentId">Agent ID</label>
+                    <input type="text" id="agentId" placeholder="Enter agent ID">
+                </div>
+                <div class="form-group">
+                    <label for="agentName">Agent Name</label>
+                    <input type="text" id="agentName" placeholder="Enter agent name">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="assignAgent(document.getElementById('modalTicketNumber').textContent)">
+                        <i class="fas fa-user-plus"></i> Assign Agent
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeAssignModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
                 </div>
             </div>
         </div>
@@ -520,6 +646,9 @@
                                         <button class="btn btn-primary" onclick="viewTicket('${ticket.ticketNumber}')" style="padding: 5px 10px; font-size: 12px;">
                                             <i class="fas fa-eye"></i> View
                                         </button>
+                                        <button class="btn btn-secondary" onclick="openAssignModal('${ticket.ticketNumber}')" style="padding: 5px 10px; font-size: 12px; margin-left: 5px;">
+                                            <i class="fas fa-user-plus"></i> Assign
+                                        </button>
                                     </td>
                                 </tr>
                             `).join('')}
@@ -533,6 +662,58 @@
 
         function viewTicket(ticketNumber) {
             showAlert(`Viewing ticket: ${ticketNumber}`, 'success');
+        }
+
+        function openAssignModal(ticketNumber) {
+            const modal = document.getElementById('assignModal');
+            const ticketNumberSpan = document.getElementById('modalTicketNumber');
+            const agentIdInput = document.getElementById('agentId');
+            const agentNameInput = document.getElementById('agentName');
+            
+            ticketNumberSpan.textContent = ticketNumber;
+            modal.style.display = 'block';
+            agentIdInput.value = '';
+            agentNameInput.value = '';
+            agentIdInput.focus();
+        }
+
+        function closeAssignModal() {
+            const modal = document.getElementById('assignModal');
+            modal.style.display = 'none';
+        }
+
+        function assignAgent(ticketNumber) {
+            const agentId = document.getElementById('agentId').value;
+            const agentName = document.getElementById('agentName').value;
+            
+            if (!agentId || !agentName) {
+                showAlert('Please enter both Agent ID and Name', 'error');
+                return;
+            }
+
+            fetch(`${API_BASE_URL}/admin/tickets/${ticketNumber}/assign`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    agentId: agentId,
+                    agentName: agentName
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showAlert('Ticket assigned successfully!', 'success');
+                    closeAssignModal();
+                    refreshData();
+                } else {
+                    showAlert(data.message || 'Failed to assign ticket', 'error');
+                }
+            })
+            .catch(error => {
+                showAlert('Error assigning ticket: ' + error.message, 'error');
+            });
         }
 
         function refreshData() {
