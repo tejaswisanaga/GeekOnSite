@@ -3,666 +3,481 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - GeekOnSites</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Admin Panel - GeekOnSite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #1a1a1a;
-            color: #e0e0e0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
-        
-        .dashboard-container {
+
+        .container {
             display: flex;
             min-height: 100vh;
         }
-        
+
         /* Sidebar */
         .sidebar {
-            width: 280px;
-            background: #121212;
-            border-right: 1px solid #2a2a2a;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            z-index: 1000;
+            width: 250px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
         }
-        
-        .sidebar-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #2a2a2a;
+
+        .logo {
             text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
         }
-        
-        .sidebar-header h2 {
-            color: #d4af37;
-            font-size: 1.3rem;
-            margin-bottom: 0.25rem;
+
+        .logo h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 5px;
         }
-        
-        .admin-info {
-            padding: 1.5rem;
-            border-bottom: 1px solid #2a2a2a;
-            text-align: center;
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
         }
-        
-        .admin-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #d4af37 0%, #b78d3f 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: 2rem;
-            color: #1a1a1a;
-        }
-        
-        .admin-name {
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 0.25rem;
-        }
-        
+
         .nav-menu {
             list-style: none;
-            padding: 1rem 0;
         }
-        
+
         .nav-menu li {
-            margin: 0.25rem 0;
+            margin-bottom: 10px;
         }
-        
+
         .nav-menu a {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.875rem 1.5rem;
-            color: #94a3b8;
+            padding: 12px 15px;
             text-decoration: none;
-            transition: all 0.3s;
-            cursor: pointer;
+            color: #333;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
-        
+
         .nav-menu a:hover,
         .nav-menu a.active {
-            background: rgba(212, 175, 55, 0.1);
-            color: #d4af37;
-            border-right: 3px solid #d4af37;
+            background: #667eea;
+            color: white;
         }
-        
+
         .nav-menu i {
+            margin-right: 10px;
             width: 20px;
-            text-align: center;
         }
-        
-        .sidebar-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid #2a2a2a;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background: #121212;
-        }
-        
-        .btn-logout {
-            width: 100%;
-            padding: 0.75rem;
-            background: transparent;
-            border: 1px solid #ef4444;
-            color: #ef4444;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-        }
-        
-        .btn-logout:hover {
-            background: #ef4444;
-            color: #fff;
-        }
-        
+
         /* Main Content */
         .main-content {
             flex: 1;
-            margin-left: 280px;
-            padding: 2rem;
-            background: #0a0a0a;
+            padding: 20px;
         }
-        
-        .page-header {
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
         }
-        
-        .page-header h1 {
-            color: #fff;
-            font-size: 1.8rem;
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
         }
-        
+
         .header-actions {
             display: flex;
-            gap: 1rem;
+            gap: 10px;
         }
-        
-        .btn-refresh {
-            padding: 0.625rem 1rem;
-            background: #2a2a2a;
-            border: 1px solid #3a3a3a;
-            color: #e0e0e0;
-            border-radius: 0.5rem;
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            display: flex;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
+            gap: 8px;
         }
-        
-        .btn-refresh:hover {
-            background: #3a3a3a;
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
         }
-        
-        /* Stats Grid */
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* Content Area */
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Stats Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
-        
+
         .stat-card {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
+            border-left: 4px solid #667eea;
         }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #d4af37;
-            margin-bottom: 0.5rem;
+
+        .stat-card h3 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 5px;
         }
-        
-        .stat-label {
-            color: #94a3b8;
-            font-size: 0.9rem;
+
+        .stat-card p {
+            color: #666;
+            font-size: 14px;
         }
-        
-        /* Tables */
+
+        /* Table */
         .table-container {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 0.75rem;
-            overflow: hidden;
-        }
-        
-        .table-header {
-            background: #2a2a2a;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #3a3a3a;
-        }
-        
-        .table-title {
-            color: #fff;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        
-        .table-content {
-            padding: 1.5rem;
             overflow-x: auto;
         }
-        
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
-        
+
         th, td {
-            padding: 1rem;
+            padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #2a2a2a;
+            border-bottom: 1px solid #e0e0e0;
         }
-        
+
         th {
-            background: #2a2a2a;
-            color: #d4af37;
+            background: #f8f9fa;
             font-weight: 600;
+            color: #333;
         }
-        
-        .badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
-            font-size: 0.75rem;
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 600;
+            text-transform: uppercase;
         }
-        
-        .badge-pending {
-            background: #f59e0b;
-            color: #fff;
+
+        .status-open {
+            background: #fff3cd;
+            color: #856404;
         }
-        
-        .badge-progress {
-            background: #3b82f6;
-            color: #fff;
+
+        .status-in-progress {
+            background: #cce5ff;
+            color: #004085;
         }
-        
-        .badge-completed {
-            background: #10b981;
-            color: #fff;
+
+        .status-resolved {
+            background: #d4edda;
+            color: #155724;
         }
-        
-        .table-actions {
-            display: flex;
-            gap: 0.5rem;
+
+        .status-closed {
+            background: #e2e3e5;
+            color: #383d41;
         }
-        
-        .btn-table {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-size: 0.875rem;
-            transition: all 0.3s;
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
         }
-        
-        .btn-assign {
-            background: #3b82f6;
-            color: #fff;
+
+        .loading i {
+            font-size: 24px;
+            animation: spin 1s linear infinite;
         }
-        
-        .btn-view {
-            background: #10b981;
-            color: #fff;
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        
+
+        /* Alert */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
         .empty-state {
             text-align: center;
-            padding: 3rem;
-            color: #94a3b8;
+            padding: 40px;
+            color: #666;
         }
-        
+
         .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #d4af37;
-        }
-        
-        /* Alerts */
-        .alert {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: 0.5rem;
-            z-index: 10001;
-            max-width: 300px;
-        }
-        
-        .alert-success {
-            background: #10b981;
-            color: #fff;
-            border-left: 4px solid #10b981;
-        }
-        
-        .alert-error {
-            background: #ef4444;
-            color: #fff;
-            border-left: 4px solid #ef4444;
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #ccc;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
+    <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
-            <div class="sidebar-header">
-                <h2><i class="fas fa-cog"></i> GeekOnSites</h2>
+            <div class="logo">
+                <h2><i class="fas fa-cogs"></i> GeekOnSite</h2>
                 <p>Admin Panel</p>
             </div>
-            
-            <div class="admin-info">
-                <div class="admin-avatar">
-                    <i class="fas fa-user-shield"></i>
-                </div>
-                <div class="admin-name" id="adminName">Administrator</div>
-            </div>
-            
             <ul class="nav-menu">
-                <li><a onclick="showTab('dashboard')" class="active">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a></li>
-                <li><a onclick="showTab('calls')">
-                    <i class="fas fa-headset"></i> All Calls
-                </a></li>
-                <li><a onclick="showTab('pending-calls')">
-                    <i class="fas fa-clock"></i> Pending Calls
-                </a></li>
-                <li><a onclick="showTab('customers')">
-                    <i class="fas fa-users"></i> All Customers
-                </a></li>
-                <li><a onclick="showTab('agents')">
-                    <i class="fas fa-headset"></i> Agents
-                </a></li>
+                <li><a href="#" class="nav-link active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="#" class="nav-link" data-tab="tickets"><i class="fas fa-ticket-alt"></i> All Tickets</a></li>
+                <li><a href="#" class="nav-link" data-tab="pending"><i class="fas fa-clock"></i> Pending Tickets</a></li>
+                <li><a href="#" class="nav-link" data-tab="inprogress"><i class="fas fa-spinner"></i> In Progress</a></li>
+                <li><a href="#" class="nav-link" data-tab="resolved"><i class="fas fa-check-circle"></i> Resolved</a></li>
             </ul>
-            
-            <div class="sidebar-footer">
-                <button class="btn-logout" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
         </div>
-        
+
         <!-- Main Content -->
         <div class="main-content">
-            <div class="page-header">
+            <div class="header">
                 <h1 id="pageTitle">Dashboard</h1>
                 <div class="header-actions">
-                    <button class="btn-refresh" onclick="refreshData()">
+                    <button class="btn btn-primary" onclick="refreshData()">
                         <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button class="btn btn-secondary" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
             </div>
-            
-            <div id="contentArea">
-                <!-- Content will be loaded here -->
+
+            <div class="content">
+                <div id="alert" class="alert"></div>
+                <div id="contentArea">
+                    <!-- Content will be loaded here -->
+                </div>
             </div>
         </div>
     </div>
-    
+
     <script>
         const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
-        let currentToken = localStorage.getItem('adminToken');
         let currentTab = 'dashboard';
-        
-        // Initialize - no authentication required
+
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             showTab('dashboard');
         });
-        
+
+        // Navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tab = this.getAttribute('data-tab');
+                showTab(tab);
+                
+                // Update active state
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
         function showTab(tab) {
             currentTab = tab;
-            
-            // Update active nav
-            document.querySelectorAll('.nav-menu a').forEach(link => {
-                link.classList.remove('active');
-            });
-            event.target.classList.add('active');
+            const contentArea = document.getElementById('contentArea');
+            const pageTitle = document.getElementById('pageTitle');
             
             // Update page title
             const titles = {
                 'dashboard': 'Dashboard',
-                'calls': 'All Calls',
-                'pending-calls': 'Pending Calls',
-                'customers': 'All Customers',
-                'agents': 'All Agents'
+                'tickets': 'All Tickets',
+                'pending': 'Pending Tickets',
+                'inprogress': 'In Progress',
+                'resolved': 'Resolved Tickets'
             };
-            document.getElementById('pageTitle').textContent = titles[tab];
+            pageTitle.textContent = titles[tab] || 'Dashboard';
+            
+            // Show loading
+            contentArea.innerHTML = '<div class="loading"><i class="fas fa-spinner"></i><p>Loading...</p></div>';
             
             // Load content
-            if (tab === 'dashboard') {
-                loadDashboard();
-            } else if (tab === 'calls' || tab === 'pending-calls') {
-                loadCalls(tab === 'pending-calls');
-            } else if (tab === 'customers') {
-                loadCustomers();
-            } else if (tab === 'agents') {
-                loadAgents();
+            switch(tab) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'tickets':
+                    loadTickets();
+                    break;
+                case 'pending':
+                    loadTicketsByStatus('OPEN');
+                    break;
+                case 'inprogress':
+                    loadTicketsByStatus('IN_PROGRESS');
+                    break;
+                case 'resolved':
+                    loadTicketsByStatus('RESOLVED');
+                    break;
+                default:
+                    loadDashboard();
             }
         }
-        
-        function loadDashboard() {
-            const content = `
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="totalCalls">0</div>
-                        <div class="stat-label">Total Tickets</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="pendingCalls">0</div>
-                        <div class="stat-label">Pending Tickets</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="inProgressCalls">0</div>
-                        <div class="stat-label">In Progress</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="completedCalls">0</div>
-                        <div class="stat-label">Completed</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="totalAgents">0</div>
-                        <div class="stat-label">Total Agents</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="totalCustomers">0</div>
-                        <div class="stat-label">Total Customers</div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('contentArea').innerHTML = content;
-            
-            // Load stats
-            fetchStats();
-        }
-        
-        function loadCalls(pendingOnly = false) {
-            const content = `
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2 class="table-title">${pendingOnly ? 'Pending' : 'All'} Calls</h2>
-                    </div>
-                    <div class="table-content">
-                        <div id="callsTable">
-                            <div class="empty-state">
-                                <i class="fas fa-spinner fa-spin"></i>
-                                <p>Loading...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('contentArea').innerHTML = content;
-            
-            // Load calls data
-            fetchCalls(pendingOnly);
-        }
-        
-        function loadCustomers() {
-            const content = `
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2 class="table-title">All Customers</h2>
-                    </div>
-                    <div class="table-content">
-                        <div id="customersTable">
-                            <div class="empty-state">
-                                <i class="fas fa-spinner fa-spin"></i>
-                                <p>Loading...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('contentArea').innerHTML = content;
-            
-            // Load customers data
-            fetchCustomers();
-        }
-        
-        function loadAgents() {
-            const content = `
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2 class="table-title">All Agents</h2>
-                    </div>
-                    <div class="table-content">
-                        <div id="agentsTable">
-                            <div class="empty-state">
-                                <i class="fas fa-spinner fa-spin"></i>
-                                <p>Loading...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('contentArea').innerHTML = content;
-            
-            // Load agents data
-            fetchAgents();
-        }
-        
-        async function fetchStats() {
+
+        async function loadDashboard() {
             try {
-                console.log('Fetching stats from:', `${API_BASE_URL}/tickets`);
-                console.log('Using token:', currentToken ? 'Token exists' : 'No token');
+                const response = await fetch(`${API_BASE_URL}/admin/dashboard`);
+                const data = await response.json();
                 
-                const response = await fetch(`${API_BASE_URL}/tickets`);
-                
-                console.log('Stats response status:', response.status);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('Stats response data:', data);
-                    
-                    if (data.success) {
-                        const tickets = data.data || [];
-                        const totalTickets = tickets.length;
-                        const openTickets = tickets.filter(t => t.status === 'OPEN').length;
-                        const inProgressTickets = tickets.filter(t => t.status === 'IN_PROGRESS').length;
-                        const completedTickets = tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED').length;
-                        
-                        document.getElementById('totalCalls').textContent = totalTickets;
-                        document.getElementById('pendingCalls').textContent = openTickets;
-                        document.getElementById('inProgressCalls').textContent = inProgressTickets;
-                        document.getElementById('completedCalls').textContent = completedTickets;
-                    } else {
-                        console.error('Stats API error:', data.message);
-                    }
-                } else {
-                    console.error('Stats API failed with status:', response.status);
-                }
-            } catch (error) {
-                console.error('Error fetching stats:', error);
-            }
-        }
-        
-        async function fetchCalls(pendingOnly = false) {
-            try {
-                console.log('Fetching calls from:', `${API_BASE_URL}/tickets`);
-                console.log('Pending only:', pendingOnly);
-                
-                const response = await fetch(`${API_BASE_URL}/tickets`);
-                
-                console.log('Calls response status:', response.status);
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('Calls response data:', data);
-                    
-                    if (data.success) {
-                        let tickets = data.data || [];
-                        console.log('Loaded tickets:', tickets);
-                        
-                        if (pendingOnly) {
-                            tickets = tickets.filter(t => t.status === 'OPEN' || t.status === 'PENDING');
-                            console.log('Filtered pending tickets:', tickets);
-                        }
-                        renderCallsTable(tickets);
-                    } else {
-                        console.error('Calls API error:', data.message);
-                        document.getElementById('callsTable').innerHTML = `
-                            <div class="empty-state">
-                                <i class="fas fa-exclamation-circle"></i>
-                                <p>Error: ${data.message}</p>
+                if (data.success) {
+                    const stats = data.data;
+                    document.getElementById('contentArea').innerHTML = `
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <h3>${stats.totalTickets || 0}</h3>
+                                <p>Total Tickets</p>
                             </div>
-                        `;
-                    }
-                } else {
-                    console.error('Calls API failed with status:', response.status);
-                    document.getElementById('callsTable').innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <p>API Error: ${response.status}</p>
+                            <div class="stat-card">
+                                <h3>${stats.openTickets || 0}</h3>
+                                <p>Open Tickets</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>${stats.inProgressTickets || 0}</h3>
+                                <p>In Progress</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>${stats.resolvedTickets || 0}</h3>
+                                <p>Resolved</p>
+                            </div>
+                        </div>
+                        <div style="margin-top: 30px;">
+                            <h3>Recent Activity</h3>
+                            <p>Dashboard statistics loaded successfully.</p>
                         </div>
                     `;
+                } else {
+                    throw new Error(data.message || 'Failed to load dashboard');
                 }
             } catch (error) {
-                console.error('Error fetching calls:', error);
-                document.getElementById('callsTable').innerHTML = `
+                document.getElementById('contentArea').innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>Network error: ${error.message}</p>
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading dashboard: ${error.message}</p>
                     </div>
                 `;
             }
         }
-        
-        async function fetchCustomers() {
+
+        async function loadTickets() {
             try {
-                const response = await fetch(`${API_BASE_URL}/admin/customers`, {
-                    headers: { 'Authorization': `Bearer ${currentToken}` }
-                });
+                const response = await fetch(`${API_BASE_URL}/admin/tickets`);
+                const data = await response.json();
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        renderCustomersTable(data.data || []);
-                    }
+                if (data.success) {
+                    renderTicketsTable(data.data);
+                } else {
+                    throw new Error(data.message || 'Failed to load tickets');
                 }
             } catch (error) {
-                console.error('Error fetching customers:', error);
-                document.getElementById('customersTable').innerHTML = `
+                document.getElementById('contentArea').innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>Error loading data</p>
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading tickets: ${error.message}</p>
                     </div>
                 `;
             }
         }
-        
-        async function fetchAgents() {
+
+        async function loadTicketsByStatus(status) {
             try {
-                const response = await fetch(`${API_BASE_URL}/admin/agents`, {
-                    headers: { 'Authorization': `Bearer ${currentToken}` }
-                });
+                const response = await fetch(`${API_BASE_URL}/admin/tickets/status/${status}`);
+                const data = await response.json();
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success) {
-                        renderAgentsTable(data.data || []);
-                    }
+                if (data.success) {
+                    renderTicketsTable(data.data);
+                } else {
+                    throw new Error(data.message || 'Failed to load tickets');
                 }
             } catch (error) {
-                console.error('Error fetching agents:', error);
-                document.getElementById('agentsTable').innerHTML = `
+                document.getElementById('contentArea').innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <p>Error loading data</p>
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading tickets: ${error.message}</p>
                     </div>
                 `;
             }
         }
-        
-        function renderCallsTable(calls) {
-            if (calls.length === 0) {
-                document.getElementById('callsTable').innerHTML = `
+
+        function renderTicketsTable(tickets) {
+            if (!tickets || tickets.length === 0) {
+                document.getElementById('contentArea').innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-inbox"></i>
                         <p>No tickets found</p>
@@ -670,172 +485,69 @@
                 `;
                 return;
             }
-            
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Ticket #</th>
-                            <th>Customer</th>
-                            <th>Status</th>
-                            <th>Support Level</th>
-                            <th>Created</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+
+            const html = `
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket #</th>
+                                <th>Customer</th>
+                                <th>Phone</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Assigned To</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tickets.map(ticket => `
+                                <tr>
+                                    <td>${ticket.ticketNumber}</td>
+                                    <td>${ticket.customerName || 'N/A'}</td>
+                                    <td>${ticket.customerPhone || 'N/A'}</td>
+                                    <td>${ticket.category || 'N/A'}</td>
+                                    <td><span class="status-badge status-${ticket.status?.toLowerCase()}">${ticket.status || 'N/A'}</span></td>
+                                    <td>${ticket.assignedToName || 'Unassigned'}</td>
+                                    <td>${new Date(ticket.createdAt).toLocaleDateString()}</td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="viewTicket('${ticket.ticketNumber}')" style="padding: 5px 10px; font-size: 12px;">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
             `;
             
-            calls.forEach(call => {
-                const statusClass = {
-                    'OPEN': 'badge-pending',
-                    'IN_PROGRESS': 'badge-progress',
-                    'RESOLVED': 'badge-completed',
-                    'CLOSED': 'badge-completed'
-                }[call.status] || 'badge-pending';
-                
-                html += `
-                    <tr>
-                        <td>${call.ticketNumber || 'N/A'}</td>
-                        <td>${call.customerName || 'N/A'}</td>
-                        <td><span class="badge ${statusClass}">${call.status || 'OPEN'}</span></td>
-                        <td>${call.supportLevel || 'L1'}</td>
-                        <td>${new Date(call.createdAt).toLocaleDateString()}</td>
-                        <td>
-                            <button class="btn-table btn-view" onclick="viewTicket('${call.ticketNumber}')">
-                                <i class="fas fa-eye"></i> View
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                    </tbody>
-                </table>
-            `;
-            
-            document.getElementById('callsTable').innerHTML = html;
+            document.getElementById('contentArea').innerHTML = html;
         }
-        
-        function renderCustomersTable(customers) {
-            if (customers.length === 0) {
-                document.getElementById('customersTable').innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-users"></i>
-                        <p>No customers found</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            customers.forEach(customer => {
-                const statusBadge = customer.verified ? 
-                    '<span class="badge badge-completed">Verified</span>' : 
-                    '<span class="badge badge-pending">Pending</span>';
-                
-                html += `
-                    <tr>
-                        <td>${customer.firstName + ' ' + customer.lastName}</td>
-                        <td>${customer.email}</td>
-                        <td>${customer.phone}</td>
-                        <td>${statusBadge}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                    </tbody>
-                </table>
-            `;
-            
-            document.getElementById('customersTable').innerHTML = html;
-        }
-        
-        function renderAgentsTable(agents) {
-            if (agents.length === 0) {
-                document.getElementById('agentsTable').innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-headset"></i>
-                        <p>No agents found</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Agent ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Specialization</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            agents.forEach(agent => {
-                html += `
-                    <tr>
-                        <td>${agent.agentId}</td>
-                        <td>${agent.firstName + ' ' + agent.lastName}</td>
-                        <td>${agent.email}</td>
-                        <td>${agent.phone}</td>
-                        <td>${agent.specialization || 'General'}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                    </tbody>
-                </table>
-            `;
-            
-            document.getElementById('agentsTable').innerHTML = html;
-        }
-        
+
         function viewTicket(ticketNumber) {
             showAlert(`Viewing ticket: ${ticketNumber}`, 'success');
         }
-        
-        function logout() {
-            // Redirect to login page
-            window.location.href = 'admin-login.html';
-        }
-        
+
         function refreshData() {
             showTab(currentTab);
         }
-        
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'index.html';
+            }
+        }
+
         function showAlert(message, type) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type}`;
-            alertDiv.innerHTML = `
-                <strong>${type === 'success' ? 'Success' : 'Error'}:</strong> ${message}
-                <button onclick="this.parentElement.remove()" style="float: right; margin-left: 10px;">&times;</button>
-            `;
-            document.body.appendChild(alertDiv);
+            const alert = document.getElementById('alert');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alert.style.display = 'block';
             
             setTimeout(() => {
-                if (alertDiv.parentElement) {
-                    alertDiv.parentElement.removeChild(alertDiv);
-                }
+                alert.style.display = 'none';
             }, 3000);
         }
     </script>
