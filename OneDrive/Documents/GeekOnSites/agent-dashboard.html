@@ -695,60 +695,57 @@
         
         async function loadDashboard() {
             try {
-                // Get agent ID from stored info
-                const agentId = agentInfo.username || agentInfo.agentId;
-                const agentFullName = (agentInfo.firstName + ' ' + agentInfo.lastName);
-                
+                console.log('Loading agent dashboard with proper endpoints...');
                 console.log('Agent Info:', agentInfo);
-                console.log('Agent ID:', agentId);
-                console.log('Agent Full Name:', agentFullName);
                 
-                // Fetch all tickets and filter by assigned agent
-                const response = await fetch(`${API_BASE_URL}/public/tickets`);
+                // Fetch agent's dashboard data from proper agent endpoint
+                const response = await fetch(`${API_BASE_URL}/agent/dashboard`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
                 
                 const data = await response.json();
                 
                 if (data.success) {
-                    const allTickets = data.data || [];
-                    console.log('All Tickets:', allTickets);
-                    
-                    const agentTickets = allTickets.filter(ticket => {
-                        const match1 = ticket.assignedTo === agentId;
-                        const match2 = ticket.assignedToName === agentFullName;
-                        console.log(`Ticket ${ticket.ticketNumber}: assignedTo=${ticket.assignedTo}, assignedToName=${ticket.assignedToName}, match1=${match1}, match2=${match2}`);
-                        return match1 || match2;
-                    });
-                    
-                    console.log('Agent Tickets:', agentTickets);
-                    updateAgentDashboard(agentTickets);
+                    console.log('Dashboard data:', data.data);
+                    updateAgentDashboard(data.data);
                 } else {
                     showAlert(data.message || 'Failed to load dashboard', 'error');
                 }
             } catch (error) {
+                console.error('Dashboard load error:', error);
                 showAlert('Network error. Please refresh.', 'error');
             }
         }
         
-        function updateAgentDashboard(tickets) {
-            // Filter tickets by status
-            const pendingTickets = tickets.filter(t => t.status === 'OPEN');
-            const inProgressTickets = tickets.filter(t => t.status === 'IN_PROGRESS');
-            const completedTickets = tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED');
+        function updateAgentDashboard(data) {
+            // Extract data from dashboard response
+            const stats = data;
+            const assignedTickets = data.assignedTickets || [];
             
-            // Update stats
-            document.getElementById('pendingCount').textContent = pendingTickets.length;
-            document.getElementById('progressCount').textContent = inProgressTickets.length;
-            document.getElementById('completedCount').textContent = completedTickets.length;
-            document.getElementById('totalCount').textContent = tickets.length;
+            // Update stats from backend
+            document.getElementById('pendingCount').textContent = stats.pendingTickets || 0;
+            document.getElementById('progressCount').textContent = stats.inProgressTickets || 0;
+            document.getElementById('completedCount').textContent = stats.completedTickets || 0;
+            document.getElementById('totalCount').textContent = stats.totalTickets || 0;
             
-            document.getElementById('pendingBadge').textContent = pendingTickets.length;
-            document.getElementById('progressBadge').textContent = inProgressTickets.length;
-            document.getElementById('completedBadge').textContent = completedTickets.length;
+            document.getElementById('pendingBadge').textContent = stats.pendingTickets || 0;
+            document.getElementById('progressBadge').textContent = stats.inProgressTickets || 0;
+            document.getElementById('completedBadge').textContent = stats.completedTickets || 0;
+            
+            // Filter tickets by status for display
+            const pendingTickets = assignedTickets.filter(t => t.status === 'OPEN');
+            const inProgressTickets = assignedTickets.filter(t => t.status === 'IN_PROGRESS');
+            const completedTickets = assignedTickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED');
             
             // Update lists
             renderTicketsList('pendingCallsList', pendingTickets, 'pending');
             renderTicketsList('progressCallsList', inProgressTickets, 'progress');
             renderTicketsList('completedCallsList', completedTickets, 'completed');
+            
+            console.log('Dashboard updated with stats:', stats);
+            console.log('Assigned tickets:', assignedTickets);
         }
         
         function renderTicketsList(containerId, tickets, type) {
@@ -797,10 +794,11 @@
         
         async function startTicket(ticketNumber) {
             try {
-                const response = await fetch(`${API_BASE_URL}/public/tickets/${ticketNumber}/status`, {
+                const response = await fetch(`${API_BASE_URL}/agent/tickets/${ticketNumber}/status`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
                     },
                     body: JSON.stringify({ status: 'IN_PROGRESS', notes: 'Started working on ticket' })
                 });
@@ -837,10 +835,11 @@
             try {
                 const notes = `Resolution: ${resolution}\nOutcome: ${outcome}\n${followUpRequired ? `Follow-up required: ${followUpNotes}` : 'No follow-up required'}`;
                 
-                const response = await fetch(`${API_BASE_URL}/public/tickets/${ticketNumber}/status`, {
+                const response = await fetch(`${API_BASE_URL}/agent/tickets/${ticketNumber}/status`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
                     },
                     body: JSON.stringify({
                         status: 'RESOLVED',
