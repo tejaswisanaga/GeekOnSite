@@ -697,6 +697,11 @@
             try {
                 // Get agent ID from stored info
                 const agentId = agentInfo.username || agentInfo.agentId;
+                const agentFullName = (agentInfo.firstName + ' ' + agentInfo.lastName);
+                
+                console.log('Agent Info:', agentInfo);
+                console.log('Agent ID:', agentId);
+                console.log('Agent Full Name:', agentFullName);
                 
                 // Fetch all tickets and filter by assigned agent
                 const response = await fetch(`${API_BASE_URL}/tickets`, {
@@ -709,11 +714,16 @@
                 
                 if (data.success) {
                     const allTickets = data.data || [];
-                    const agentTickets = allTickets.filter(ticket => 
-                        ticket.assignedTo === agentId || 
-                        ticket.assignedToName === (agentInfo.firstName + ' ' + agentInfo.lastName)
-                    );
+                    console.log('All Tickets:', allTickets);
                     
+                    const agentTickets = allTickets.filter(ticket => {
+                        const match1 = ticket.assignedTo === agentId;
+                        const match2 = ticket.assignedToName === agentFullName;
+                        console.log(`Ticket ${ticket.ticketNumber}: assignedTo=${ticket.assignedTo}, assignedToName=${ticket.assignedToName}, match1=${match1}, match2=${match2}`);
+                        return match1 || match2;
+                    });
+                    
+                    console.log('Agent Tickets:', agentTickets);
                     updateAgentDashboard(agentTickets);
                 } else {
                     showAlert(data.message || 'Failed to load dashboard', 'error');
