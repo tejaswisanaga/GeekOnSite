@@ -333,8 +333,13 @@
         const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
         let currentTab = 'dashboard';
 
-        // Initialize
+        // Check authentication
         document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('adminToken');
+            if (!token) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
             showTab('dashboard');
         });
 
@@ -536,7 +541,9 @@
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                window.location.href = 'index.html';
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminInfo');
+                window.location.href = 'admin-login.html';
             }
         }
 
