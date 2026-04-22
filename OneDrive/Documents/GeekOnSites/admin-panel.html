@@ -391,48 +391,9 @@
         let currentToken = localStorage.getItem('adminToken');
         let currentTab = 'dashboard';
         
-        // Check authentication
-        if (!currentToken) {
-            console.log('No token found, redirecting to login');
-            window.location.href = 'admin-login.html';
-        }
-        
-        // Validate token by making a test API call
-        async function validateToken() {
-            try {
-                console.log('Validating admin token...');
-                console.log('Current token from localStorage:', currentToken);
-                console.log('Token length:', currentToken ? currentToken.length : 'No token');
-                
-                const response = await fetch(`${API_BASE_URL}/admin/dashboard`, {
-                    headers: { 'Authorization': `Bearer ${currentToken}` }
-                });
-                
-                console.log('Token validation response status:', response.status);
-                
-                if (response.status === 403 || response.status === 401) {
-                    console.log('Token invalid, clearing and redirecting to login');
-                    localStorage.removeItem('adminToken');
-                    localStorage.removeItem('adminInfo');
-                    window.location.href = 'admin-login.html';
-                    return false;
-                }
-                
-                console.log('Token is valid');
-                return true;
-            } catch (error) {
-                console.error('Error validating token:', error);
-                return false;
-            }
-        }
-        
-        // Initialize
+        // Initialize - no authentication required
         document.addEventListener('DOMContentLoaded', function() {
-            validateToken().then(valid => {
-                if (valid) {
-                    showTab('dashboard');
-                }
-            });
+            showTab('dashboard');
         });
         
         function showTab(tab) {
@@ -594,12 +555,6 @@
                     } else {
                         console.error('Stats API error:', data.message);
                     }
-                } else if (response.status === 403 || response.status === 401) {
-                    console.log('Token expired during stats fetch, redirecting to login');
-                    localStorage.removeItem('adminToken');
-                    localStorage.removeItem('adminInfo');
-                    window.location.href = 'admin-login.html';
-                    return;
                 } else {
                     console.error('Stats API failed with status:', response.status);
                 }
@@ -639,12 +594,6 @@
                             </div>
                         `;
                     }
-                } else if (response.status === 403 || response.status === 401) {
-                    console.log('Token expired during calls fetch, redirecting to login');
-                    localStorage.removeItem('adminToken');
-                    localStorage.removeItem('adminInfo');
-                    window.location.href = 'admin-login.html';
-                    return;
                 } else {
                     console.error('Calls API failed with status:', response.status);
                     document.getElementById('callsTable').innerHTML = `
@@ -866,9 +815,8 @@
         }
         
         function logout() {
-            localStorage.removeItem('adminToken');
-            localStorage.removeItem('adminInfo');
-            window.location.href = 'admin-login.html';
+            // No logout needed - just refresh the page
+            location.reload();
         }
         
         function refreshData() {
