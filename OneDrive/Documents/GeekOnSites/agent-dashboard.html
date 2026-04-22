@@ -704,7 +704,7 @@
                 console.log('Agent Full Name:', agentFullName);
                 
                 // Fetch all tickets and filter by assigned agent
-                const response = await fetch(`${API_BASE_URL}/public/tickets`);
+                const response = await fetch(`${API_BASE_URL}/tickets/public/tickets`);
                 
                 const data = await response.json();
                 
@@ -797,7 +797,7 @@
         
         async function startTicket(ticketNumber) {
             try {
-                const response = await fetch(`${API_BASE_URL}/public/tickets/${ticketNumber}/status`, {
+                const response = await fetch(`${API_BASE_URL}/tickets/public/tickets/${ticketNumber}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -837,7 +837,7 @@
             try {
                 const notes = `Resolution: ${resolution}\nOutcome: ${outcome}\n${followUpRequired ? `Follow-up required: ${followUpNotes}` : 'No follow-up required'}`;
                 
-                const response = await fetch(`${API_BASE_URL}/public/tickets/${ticketNumber}/status`, {
+                const response = await fetch(`${API_BASE_URL}/tickets/public/tickets/${ticketNumber}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
