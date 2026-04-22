@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - GeekOnsites</title>
+    <title>Admin Panel - GeekOnSites</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -15,8 +15,8 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--primary-color, #1a1a1a);
-            color: var(--text-color, #e0e0e0);
+            background: #1a1a1a;
+            color: #e0e0e0;
             min-height: 100vh;
         }
         
@@ -33,6 +33,7 @@
             position: fixed;
             height: 100vh;
             overflow-y: auto;
+            z-index: 1000;
         }
         
         .sidebar-header {
@@ -45,11 +46,6 @@
             color: #d4af37;
             font-size: 1.3rem;
             margin-bottom: 0.25rem;
-        }
-        
-        .sidebar-header p {
-            color: #94a3b8;
-            font-size: 0.8rem;
         }
         
         .admin-info {
@@ -77,11 +73,6 @@
             margin-bottom: 0.25rem;
         }
         
-        .admin-role {
-            color: #94a3b8;
-            font-size: 0.85rem;
-        }
-        
         .nav-menu {
             list-style: none;
             padding: 1rem 0;
@@ -99,6 +90,7 @@
             color: #94a3b8;
             text-decoration: none;
             transition: all 0.3s;
+            cursor: pointer;
         }
         
         .nav-menu a:hover,
@@ -167,7 +159,7 @@
             gap: 1rem;
         }
         
-        .btn-refresh, .btn-primary {
+        .btn-refresh {
             padding: 0.625rem 1rem;
             background: #2a2a2a;
             border: 1px solid #3a3a3a;
@@ -180,25 +172,14 @@
             transition: all 0.3s;
         }
         
-        .btn-primary {
-            background: #d4af37;
-            border: none;
-            color: #1a1a1a;
-            font-weight: 600;
-        }
-        
         .btn-refresh:hover {
             background: #3a3a3a;
-        }
-        
-        .btn-primary:hover {
-            opacity: 0.9;
         }
         
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -208,43 +189,14 @@
             border: 1px solid #2a2a2a;
             border-radius: 0.75rem;
             padding: 1.5rem;
-            transition: all 0.3s;
+            text-align: center;
         }
         
-        .stat-card:hover {
-            border-color: #d4af37;
-            transform: translateY(-2px);
-        }
-        
-        .stat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-        
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-        }
-        
-        .stat-icon.calls { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
-        .stat-icon.pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .stat-icon.progress { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
-        .stat-icon.completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .stat-icon.agents { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
-        .stat-icon.customers { background: rgba(236, 72, 153, 0.2); color: #ec4899; }
-        
-        .stat-value {
-            font-size: 2rem;
+        .stat-number {
+            font-size: 2.5rem;
             font-weight: 700;
-            color: #fff;
-            margin-bottom: 0.25rem;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
         }
         
         .stat-label {
@@ -252,39 +204,7 @@
             font-size: 0.9rem;
         }
         
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid #2a2a2a;
-            padding-bottom: 0.5rem;
-        }
-        
-        .tab {
-            padding: 0.75rem 1.25rem;
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-            border-radius: 0.5rem;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .tab:hover {
-            color: #e0e0e0;
-            background: #2a2a2a;
-        }
-        
-        .tab.active {
-            color: #d4af37;
-            background: rgba(212, 175, 55, 0.1);
-        }
-        
-        /* Table */
+        /* Tables */
         .table-container {
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
@@ -293,38 +213,20 @@
         }
         
         .table-header {
+            background: #2a2a2a;
             padding: 1rem 1.5rem;
-            border-bottom: 1px solid #2a2a2a;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-bottom: 1px solid #3a3a3a;
         }
         
-        .table-header h3 {
+        .table-title {
             color: #fff;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
         
-        .search-box {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: #0a0a0a;
-            border: 1px solid #2a2a2a;
-            border-radius: 0.5rem;
-            padding: 0.5rem 0.75rem;
-        }
-        
-        .search-box input {
-            background: transparent;
-            border: none;
-            color: #e0e0e0;
-            outline: none;
-            width: 200px;
-        }
-        
-        .search-box input::placeholder {
-            color: #94a3b8;
+        .table-content {
+            padding: 1.5rem;
+            overflow-x: auto;
         }
         
         table {
@@ -333,41 +235,38 @@
         }
         
         th, td {
-            padding: 1rem 1.5rem;
+            padding: 1rem;
             text-align: left;
             border-bottom: 1px solid #2a2a2a;
         }
         
         th {
-            color: #94a3b8;
+            background: #2a2a2a;
+            color: #d4af37;
             font-weight: 600;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-        }
-        
-        td {
-            color: #e0e0e0;
-        }
-        
-        tr:hover {
-            background: rgba(42, 42, 42, 0.5);
         }
         
         .badge {
             padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
+            border-radius: 1rem;
             font-size: 0.75rem;
             font-weight: 600;
         }
         
-        .badge-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .badge-progress { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
-        .badge-completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .badge-verified { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .badge-unverified { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .badge-rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-        .badge-active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .badge-inactive { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .badge-pending {
+            background: #f59e0b;
+            color: #fff;
+        }
+        
+        .badge-progress {
+            background: #3b82f6;
+            color: #fff;
+        }
+        
+        .badge-completed {
+            background: #10b981;
+            color: #fff;
+        }
         
         .table-actions {
             display: flex;
@@ -375,36 +274,22 @@
         }
         
         .btn-table {
-            padding: 0.375rem 0.75rem;
+            padding: 0.5rem 1rem;
             border: none;
-            border-radius: 0.375rem;
+            border-radius: 0.5rem;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.875rem;
             transition: all 0.3s;
         }
         
-        .btn-edit {
-            background: #60a5fa;
+        .btn-assign {
+            background: #3b82f6;
             color: #fff;
         }
         
-        .btn-verify {
+        .btn-view {
             background: #10b981;
             color: #fff;
-        }
-        
-        .btn-assign {
-            background: #8b5cf6;
-            color: #fff;
-        }
-        
-        .btn-delete {
-            background: #ef4444;
-            color: #fff;
-        }
-        
-        .btn-table:hover {
-            opacity: 0.8;
         }
         
         .empty-state {
@@ -416,178 +301,64 @@
         .empty-state i {
             font-size: 3rem;
             margin-bottom: 1rem;
-            opacity: 0.5;
+            color: #d4af37;
         }
         
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 0.75rem;
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid #2a2a2a;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-header h3 {
-            color: #fff;
-        }
-        
-        .btn-close {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        .modal-body {
-            padding: 1.5rem;
-        }
-        
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #e0e0e0;
-            font-weight: 500;
-        }
-        
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            background: #0a0a0a;
-            border: 1px solid #2a2a2a;
-            color: #fff;
-            border-radius: 0.5rem;
-        }
-        
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-        
-        .modal-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid #2a2a2a;
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-        
-        .btn-cancel {
-            padding: 0.625rem 1.25rem;
-            background: transparent;
-            border: 1px solid #2a2a2a;
-            color: #94a3b8;
-            border-radius: 0.5rem;
-            cursor: pointer;
-        }
-        
-        .btn-save {
-            padding: 0.625rem 1.25rem;
-            background: #d4af37;
-            border: none;
-            color: #1a1a1a;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        
+        /* Alerts */
         .alert {
-            padding: 1rem;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
             border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            display: none;
+            z-index: 10001;
+            max-width: 300px;
         }
         
         .alert-success {
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid #10b981;
-            color: #10b981;
-            display: block;
+            background: #10b981;
+            color: #fff;
+            border-left: 4px solid #10b981;
         }
         
         .alert-error {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid #ef4444;
-            color: #ef4444;
-            display: block;
+            background: #ef4444;
+            color: #fff;
+            border-left: 4px solid #ef4444;
         }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <div class="sidebar">
             <div class="sidebar-header">
-                <h2><i class="fas fa-shield-alt"></i> GeekOnsites</h2>
-                <p>Admin Control Panel</p>
+                <h2><i class="fas fa-cog"></i> GeekOnSites</h2>
+                <p>Admin Panel</p>
             </div>
             
             <div class="admin-info">
                 <div class="admin-avatar">
                     <i class="fas fa-user-shield"></i>
                 </div>
-                <div class="admin-name" id="adminName">Loading...</div>
-                <div class="admin-role">Administrator</div>
+                <div class="admin-name" id="adminName">Administrator</div>
             </div>
             
             <ul class="nav-menu">
-                <li><a href="#" class="active" onclick="showTab('dashboard')">
-                    <i class="fas fa-chart-line"></i> Dashboard
+                <li><a onclick="showTab('dashboard')" class="active">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a></li>
-                <li><a href="#" onclick="showTab('calls')">
-                    <i class="fas fa-phone"></i> All Calls
+                <li><a onclick="showTab('calls')">
+                    <i class="fas fa-headset"></i> All Calls
                 </a></li>
-                <li><a href="#" onclick="showTab('pending-calls')">
+                <li><a onclick="showTab('pending-calls')">
                     <i class="fas fa-clock"></i> Pending Calls
                 </a></li>
-                <li><a href="#" onclick="showTab('customers')">
-                    <i class="fas fa-users"></i> Customers
+                <li><a onclick="showTab('customers')">
+                    <i class="fas fa-users"></i> All Customers
                 </a></li>
-                <li><a href="#" onclick="showTab('agents')">
+                <li><a onclick="showTab('agents')">
                     <i class="fas fa-headset"></i> Agents
-                </a></li>
-                <li><a href="#" onclick="showTab('verification')">
-                    <i class="fas fa-id-card"></i> Pending Verification
                 </a></li>
             </ul>
             
@@ -596,14 +367,12 @@
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </button>
             </div>
-        </aside>
+        </div>
         
         <!-- Main Content -->
-        <main class="main-content">
-            <div id="alertBox" class="alert"></div>
-            
+        <div class="main-content">
             <div class="page-header">
-                <h1 id="pageTitle">Admin Dashboard</h1>
+                <h1 id="pageTitle">Dashboard</h1>
                 <div class="header-actions">
                     <button class="btn-refresh" onclick="refreshData()">
                         <i class="fas fa-sync-alt"></i> Refresh
@@ -611,166 +380,8 @@
                 </div>
             </div>
             
-            <!-- Dashboard Stats -->
-            <div id="dashboardView">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon calls">
-                                <i class="fas fa-phone"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value" id="totalCalls">0</div>
-                        <div class="stat-label">Total Calls</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon pending">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value" id="pendingCalls">0</div>
-                        <div class="stat-label">Pending</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon progress">
-                                <i class="fas fa-spinner"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value" id="inProgressCalls">0</div>
-                        <div class="stat-label">In Progress</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon completed">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value" id="completedCalls">0</div>
-                        <div class="stat-label">Completed</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon agents">
-                                <i class="fas fa-headset"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value" id="totalAgents">0</div>
-                        <div class="stat-label">Total Agents</div>
-                    </div>
-                    
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <div class="stat-icon customers">
-                                <i class="fas fa-users"></i>
-                            </div>
-                        </div>
-                        <div class="stat-value" id="totalCustomers">0</div>
-                        <div class="stat-label">Total Customers</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Data Tables -->
-            <div class="table-container" id="tableView">
-                <div class="table-header">
-                    <h3 id="tableTitle">All Calls</h3>
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="searchInput" placeholder="Search...">
-                    </div>
-                </div>
-                <div id="tableContent">
-                    <!-- Dynamic table content -->
-                </div>
-            </div>
-        </main>
-    </div>
-    
-    <!-- Create Call Modal -->
-    <div class="modal" id="createCallModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Create New Call</h3>
-                <button class="btn-close" onclick="closeModal('createCallModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="callCustomerId">Customer ID</label>
-                    <input type="text" id="callCustomerId" placeholder="Enter customer ID">
-                </div>
-                <div class="form-group">
-                    <label for="callPriority">Priority</label>
-                    <select id="callPriority">
-                        <option value="LOW">Low</option>
-                        <option value="MEDIUM" selected>Medium</option>
-                        <option value="HIGH">High</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="callIssue">Issue Description</label>
-                    <textarea id="callIssue" placeholder="Describe the issue..."></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal('createCallModal')">Cancel</button>
-                <button class="btn-save" onclick="createCall()">Create Call</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Assign Agent Modal -->
-    <div class="modal" id="assignModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Assign Call to Agent</h3>
-                <button class="btn-close" onclick="closeModal('assignModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="assignCallId">
-                <div class="form-group">
-                    <label for="assignAgentId">Select Agent</label>
-                    <select id="assignAgentId">
-                        <option value="">Loading agents...</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal('assignModal')">Cancel</button>
-                <button class="btn-save" onclick="assignCall()">Assign</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Verify Customer Modal -->
-    <div class="modal" id="verifyModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Verify Customer</h3>
-                <button class="btn-close" onclick="closeModal('verifyModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="verifyCustomerId">
-                <div class="form-group">
-                    <label>Verification Decision</label>
-                    <select id="verifyDecision">
-                        <option value="true">Approve - Verify Customer</option>
-                        <option value="false">Reject - Decline Customer</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="verifyNotes">Verification Notes</label>
-                    <textarea id="verifyNotes" placeholder="Enter verification notes..."></textarea>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal('verifyModal')">Cancel</button>
-                <button class="btn-save" onclick="verifyCustomer()">Submit</button>
+            <div id="contentArea">
+                <!-- Content will be loaded here -->
             </div>
         </div>
     </div>
@@ -778,267 +389,19 @@
     <script>
         const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
         let currentToken = localStorage.getItem('adminToken');
-        let adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}');
         let currentTab = 'dashboard';
-        let agentsList = [];
         
         // Check authentication
-        console.log('Current token:', currentToken ? 'Token exists' : 'No token');
-        console.log('Admin info:', adminInfo);
-        
-        if (!currentToken || currentToken === 'null' || currentToken === 'undefined') {
-            console.log('No valid token, redirecting to login');
+        if (!currentToken) {
             window.location.href = 'admin-login.html';
-            return;
         }
         
-        // Set admin info
-        if (adminInfo && adminInfo.firstName) {
-            document.getElementById('adminName').textContent = 
-                adminInfo.firstName + ' ' + (adminInfo.lastName || '');
-        }
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showTab('dashboard');
+        });
         
-        checkAuthentication();
-        
-        function getMockCalls(pendingOnly = false) {
-            const mockCalls = [
-                {
-                    ticketNumber: 'TKT001',
-                    customerName: 'John Doe',
-                    customerPhone: '+1234567890',
-                    customerEmail: 'john@example.com',
-                    status: 'OPEN',
-                    supportLevel: 'L1_FIRST_LINE',
-                    category: 'LAPTOP_REPAIR',
-                    issueDescription: 'Laptop not turning on',
-                    createdAt: new Date().toISOString(),
-                    assignedTo: null,
-                    assignedToName: 'Unassigned'
-                },
-                {
-                    ticketNumber: 'TKT002',
-                    customerName: 'Jane Smith',
-                    customerPhone: '+0987654321',
-                    customerEmail: 'jane@example.com',
-                    status: 'IN_PROGRESS',
-                    supportLevel: 'L2_SECOND_LINE',
-                    category: 'NETWORK_ISSUES',
-                    issueDescription: 'Internet connection problems',
-                    createdAt: new Date(Date.now() - 86400000).toISOString(),
-                    assignedTo: 'AGENT001',
-                    assignedToName: 'Agent Johnson'
-                },
-                {
-                    ticketNumber: 'TKT003',
-                    customerName: 'Bob Wilson',
-                    customerPhone: '+1122334455',
-                    customerEmail: 'bob@example.com',
-                    status: 'RESOLVED',
-                    supportLevel: 'L1_FIRST_LINE',
-                    category: 'PRINTER_SETUP',
-                    issueDescription: 'Printer installation help',
-                    createdAt: new Date(Date.now() - 172800000).toISOString(),
-                    assignedTo: 'AGENT002',
-                    assignedToName: 'Agent Davis'
-                }
-            ];
-            
-            if (pendingOnly) {
-                return mockCalls.filter(c => c.status === 'OPEN' || c.status === 'PENDING');
-            }
-            return mockCalls;
-        }
-        
-        function getMockCustomers() {
-            return [
-                {
-                    customerId: 'CUST001',
-                    firstName: 'John',
-                    lastName: 'Doe',
-                    email: 'john@example.com',
-                    phone: '+1234567890',
-                    city: 'New York',
-                    state: 'NY',
-                    verified: true,
-                    registeredAt: new Date(Date.now() - 86400000 * 7).toISOString()
-                },
-                {
-                    customerId: 'CUST002',
-                    firstName: 'Jane',
-                    lastName: 'Smith',
-                    email: 'jane@example.com',
-                    phone: '+0987654321',
-                    city: 'Los Angeles',
-                    state: 'CA',
-                    verified: false,
-                    registeredAt: new Date(Date.now() - 86400000 * 3).toISOString()
-                },
-                {
-                    customerId: 'CUST003',
-                    firstName: 'Bob',
-                    lastName: 'Wilson',
-                    email: 'bob@example.com',
-                    phone: '+1122334455',
-                    city: 'Chicago',
-                    state: 'IL',
-                    verified: false,
-                    registeredAt: new Date(Date.now() - 86400000).toISOString()
-                }
-            ];
-        }
-        
-        function getMockAgents() {
-            return [
-                {
-                    agentId: 'AGENT001',
-                    fullName: 'Agent Johnson',
-                    email: 'johnson@geekonsites.com',
-                    phone: '+1111111111',
-                    active: true
-                },
-                {
-                    agentId: 'AGENT002',
-                    fullName: 'Agent Davis',
-                    email: 'davis@geekonsites.com',
-                    phone: '+2222222222',
-                    active: true
-                },
-                {
-                    agentId: 'AGENT003',
-                    fullName: 'Agent Wilson',
-                    email: 'wilson@geekonsites.com',
-                    phone: '+3333333333',
-                    active: false
-                }
-            ];
-        }
-
-        async function loadDashboard() {
-            try {
-                let stats = {
-                    totalCalls: 0,
-                    pendingCalls: 0,
-                    inProgressCalls: 0,
-                    completedCalls: 0,
-                    totalAgents: 0,
-                    totalCustomers: 0
-                };
-                
-                // Try admin dashboard endpoint first
-                try {
-                    const dashboardResponse = await fetch(`${API_BASE_URL}/admin/dashboard`, {
-                        headers: {
-                            'Authorization': `Bearer ${currentToken}`
-                        }
-                    });
-                    
-                    if (dashboardResponse.ok) {
-                        const dashboardData = await dashboardResponse.json();
-                        if (dashboardData.success) {
-                            const data = dashboardData.data || {};
-                            stats = {
-                                totalCalls: data.totalCalls || 0,
-                                pendingCalls: data.pendingCalls || 0,
-                                inProgressCalls: data.inProgressCalls || 0,
-                                completedCalls: data.completedCalls || 0,
-                                totalAgents: data.totalAgents || 0,
-                                totalCustomers: data.totalCustomers || 0
-                            };
-                        }
-                    }
-                } catch (e) {
-                    console.log('Admin dashboard endpoint not available');
-                }
-                
-                // If admin dashboard failed, try individual endpoints
-                if (stats.totalCalls === 0) {
-                    try {
-                        // Try tickets endpoint
-                        const ticketsResponse = await fetch(`${API_BASE_URL}/tickets`, {
-                            headers: {
-                                'Authorization': `Bearer ${currentToken}`
-                            }
-                        });
-                        
-                        if (ticketsResponse.ok) {
-                            const ticketsData = await ticketsResponse.json();
-                            if (ticketsData.success) {
-                                const tickets = ticketsData.data || [];
-                                stats.totalCalls = tickets.length;
-                                stats.pendingCalls = tickets.filter(t => t.status === 'OPEN' || t.status === 'PENDING').length;
-                                stats.inProgressCalls = tickets.filter(t => t.status === 'IN_PROGRESS').length;
-                                stats.completedCalls = tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED').length;
-                            }
-                        }
-                    } catch (e) {
-                        console.log('Tickets endpoint not available, using mock data');
-                        const mockCalls = getMockCalls();
-                        stats.totalCalls = mockCalls.length;
-                        stats.pendingCalls = mockCalls.filter(c => c.status === 'OPEN' || c.status === 'PENDING').length;
-                        stats.inProgressCalls = mockCalls.filter(c => c.status === 'IN_PROGRESS').length;
-                        stats.completedCalls = mockCalls.filter(c => c.status === 'RESOLVED' || c.status === 'CLOSED').length;
-                    }
-                }
-                
-                // Try to get agents count
-                try {
-                    const agentsResponse = await fetch(`${API_BASE_URL}/admin/agents`, {
-                        headers: {
-                            'Authorization': `Bearer ${currentToken}`
-                        }
-                    });
-                    if (agentsResponse.ok) {
-                        const agentsData = await agentsResponse.json();
-                        if (agentsData.success) {
-                            stats.totalAgents = (agentsData.data || []).length;
-                        }
-                    }
-                } catch (e) {
-                    stats.totalAgents = 5; // Mock value
-                }
-                
-                // Try to get customers count
-                try {
-                    const customersResponse = await fetch(`${API_BASE_URL}/admin/customers`, {
-                        headers: {
-                            'Authorization': `Bearer ${currentToken}`
-                        }
-                    });
-                    if (customersResponse.ok) {
-                        const customersData = await customersResponse.json();
-                        if (customersData.success) {
-                            stats.totalCustomers = (customersData.data || []).length;
-                        }
-                    }
-                } catch (e) {
-                    stats.totalCustomers = 12; // Mock value
-                }
-                
-                updateStats(stats);
-            } catch (error) {
-                console.error('Error loading dashboard:', error);
-                // Use mock data as fallback
-                updateStats({
-                    totalCalls: 3,
-                    pendingCalls: 1,
-                    inProgressCalls: 1,
-                    completedCalls: 1,
-                    totalAgents: 5,
-                    totalCustomers: 12
-                });
-            }
-        }
-        
-        function updateStats(stats) {
-            document.getElementById('totalCalls').textContent = stats.totalCalls || 0;
-            document.getElementById('pendingCalls').textContent = stats.pendingCalls || 0;
-            document.getElementById('inProgressCalls').textContent = stats.inProgressCalls || 0;
-            document.getElementById('completedCalls').textContent = stats.completedCalls || 0;
-            document.getElementById('totalAgents').textContent = stats.totalAgents || 0;
-            document.getElementById('totalCustomers').textContent = stats.totalCustomers || 0;
-        }
-        
-        async function showTab(tab) {
+        function showTab(tab) {
             currentTab = tab;
             
             // Update active nav
@@ -1053,109 +416,228 @@
                 'calls': 'All Calls',
                 'pending-calls': 'Pending Calls',
                 'customers': 'All Customers',
-                'agents': 'All Agents',
-                'verification': 'Pending Verification'
+                'agents': 'All Agents'
             };
             document.getElementById('pageTitle').textContent = titles[tab];
             
-            // Show/hide views - using tableContent for all tabs
-            
-            // Load data
+            // Load content
             if (tab === 'dashboard') {
                 loadDashboard();
             } else if (tab === 'calls' || tab === 'pending-calls') {
-                await loadCalls(tab === 'pending-calls');
+                loadCalls(tab === 'pending-calls');
             } else if (tab === 'customers') {
-                await loadCustomers();
+                loadCustomers();
             } else if (tab === 'agents') {
-                await loadAgents();
-            } else if (tab === 'verification') {
-                await loadPendingVerification();
+                loadAgents();
             }
         }
         
-        async function loadCalls(pendingOnly = false) {
+        function loadDashboard() {
+            const content = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCalls">0</div>
+                        <div class="stat-label">Total Tickets</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="pendingCalls">0</div>
+                        <div class="stat-label">Pending Tickets</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="inProgressCalls">0</div>
+                        <div class="stat-label">In Progress</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="completedCalls">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalAgents">0</div>
+                        <div class="stat-label">Total Agents</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCustomers">0</div>
+                        <div class="stat-label">Total Customers</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('contentArea').innerHTML = content;
+            
+            // Load stats
+            fetchStats();
+        }
+        
+        function loadCalls(pendingOnly = false) {
+            const content = `
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2 class="table-title">${pendingOnly ? 'Pending' : 'All'} Calls</h2>
+                    </div>
+                    <div class="table-content">
+                        <div id="callsTable">
+                            <div class="empty-state">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('contentArea').innerHTML = content;
+            
+            // Load calls data
+            fetchCalls(pendingOnly);
+        }
+        
+        function loadCustomers() {
+            const content = `
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2 class="table-title">All Customers</h2>
+                    </div>
+                    <div class="table-content">
+                        <div id="customersTable">
+                            <div class="empty-state">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('contentArea').innerHTML = content;
+            
+            // Load customers data
+            fetchCustomers();
+        }
+        
+        function loadAgents() {
+            const content = `
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2 class="table-title">All Agents</h2>
+                    </div>
+                    <div class="table-content">
+                        <div id="agentsTable">
+                            <div class="empty-state">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('contentArea').innerHTML = content;
+            
+            // Load agents data
+            fetchAgents();
+        }
+        
+        async function fetchStats() {
             try {
-                // Try admin endpoint first, then fallback to tickets endpoint
-                let url = `${API_BASE_URL}/admin/calls`;
-                let data;
-                let response;
-                
-                console.log('Loading calls from:', url);
-                console.log('Using token:', currentToken ? 'Bearer ' + currentToken.substring(0, 20) + '...' : 'No token');
-                
-                // Try admin calls endpoint first
-                response = await fetch(url, {
+                const response = await fetch(`${API_BASE_URL}/tickets`, {
                     headers: { 'Authorization': `Bearer ${currentToken}` }
                 });
                 
-                console.log('Admin endpoint response status:', response.status);
-                
-                if (response.status === 404) {
-                    // Fallback to tickets endpoint if admin endpoint not available
-                    console.log('Admin endpoint not found, trying tickets endpoint');
-                    url = `${API_BASE_URL}/tickets`;
-                    response = await fetch(url, {
-                        headers: { 'Authorization': `Bearer ${currentToken}` }
-                    });
-                    console.log('Tickets endpoint response status:', response.status);
-                }
-                
-                if (response.status === 403 || response.status === 401) {
-                    console.error('Authentication failed - token may be expired');
-                    localStorage.removeItem('adminToken');
-                    localStorage.removeItem('adminInfo');
-                    window.location.href = 'admin-login.html';
-                    return;
-                }
-                
-                if (response.status === 404) {
-                    // Both endpoints not available, show mock data
-                    console.log('No endpoints available, showing mock data');
-                    renderCallsTable(getMockCalls(pendingOnly));
-                    return;
-                }
-                
-                data = await response.json();
-                console.log('Calls data:', data);
-                
-                if (data.success) {
-                    let calls = data.data || [];
-                    console.log('Loaded calls:', calls);
-                    // Filter pending calls if needed
-                    if (pendingOnly) {
-                        calls = calls.filter(c => c.status === 'OPEN' || c.status === 'PENDING' || c.status === 'pending');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        const tickets = data.data || [];
+                        const totalTickets = tickets.length;
+                        const openTickets = tickets.filter(t => t.status === 'OPEN').length;
+                        const inProgressTickets = tickets.filter(t => t.status === 'IN_PROGRESS').length;
+                        const completedTickets = tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED').length;
+                        
+                        document.getElementById('totalCalls').textContent = totalTickets;
+                        document.getElementById('pendingCalls').textContent = openTickets;
+                        document.getElementById('inProgressCalls').textContent = inProgressTickets;
+                        document.getElementById('completedCalls').textContent = completedTickets;
                     }
-                    renderCallsTable(calls);
-                } else {
-                    console.error('Failed to load calls:', data.message);
-                    document.getElementById('tableContent').innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <p>Error loading calls: ${data.message}</p>
-                        </div>
-                    `;
                 }
             } catch (error) {
-                console.error('Error loading calls:', error);
-                document.getElementById('tableContent').innerHTML = `
+                console.error('Error fetching stats:', error);
+            }
+        }
+        
+        async function fetchCalls(pendingOnly = false) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/tickets`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        let tickets = data.data || [];
+                        if (pendingOnly) {
+                            tickets = tickets.filter(t => t.status === 'OPEN' || t.status === 'PENDING');
+                        }
+                        renderCallsTable(tickets);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching calls:', error);
+                document.getElementById('callsTable').innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-exclamation-circle"></i>
-                        <p>Error loading calls. Please try again.</p>
+                        <p>Error loading data</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function fetchCustomers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/customers`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        renderCustomersTable(data.data || []);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching customers:', error);
+                document.getElementById('customersTable').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error loading data</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function fetchAgents() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/agents`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        renderAgentsTable(data.data || []);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching agents:', error);
+                document.getElementById('agentsTable').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error loading data</p>
                     </div>
                 `;
             }
         }
         
         function renderCallsTable(calls) {
-            document.getElementById('tableTitle').textContent = currentTab === 'pending-calls' ? 
-                'Pending Calls' : 'All Calls';
-            
             if (calls.length === 0) {
-                document.getElementById('tableContent').innerHTML = `
+                document.getElementById('callsTable').innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-inbox"></i>
-                        <p>No calls found</p>
+                        <p>No tickets found</p>
                     </div>
                 `;
                 return;
@@ -1169,7 +651,6 @@
                             <th>Customer</th>
                             <th>Status</th>
                             <th>Support Level</th>
-                            <th>Agent</th>
                             <th>Created</th>
                             <th>Actions</th>
                         </tr>
@@ -1178,89 +659,40 @@
             `;
             
             calls.forEach(call => {
-                // Map ticket status to badge classes
                 const statusClass = {
                     'OPEN': 'badge-pending',
                     'IN_PROGRESS': 'badge-progress',
                     'RESOLVED': 'badge-completed',
-                    'CLOSED': 'badge-completed',
-                    'ESCALATED': 'badge-rejected',
-                    'WAITING_CUSTOMER': 'badge-pending'
+                    'CLOSED': 'badge-completed'
                 }[call.status] || 'badge-pending';
-                
-                // Map supportLevel to priority display
-                const priorityMap = {
-                    'L1_FIRST_LINE': 'L1 - Basic',
-                    'L2_SECOND_LINE': 'L2 - Advanced',
-                    'L3_SPECIALIST': 'L3 - Specialist'
-                };
-                const priorityDisplay = priorityMap[call.supportLevel] || call.supportLevel || 'L1';
-                
-                // Use ticketNumber instead of callId
-                const ticketNum = call.ticketNumber || call.callId || call.id;
                 
                 html += `
                     <tr>
-                        <td>${ticketNum}</td>
-                        <td>
-                            ${call.customerName || 'N/A'}<br>
-                            <small>${call.customerPhone || 'N/A'}</small>
-                        </td>
+                        <td>${call.ticketNumber || 'N/A'}</td>
+                        <td>${call.customerName || 'N/A'}</td>
                         <td><span class="badge ${statusClass}">${call.status || 'OPEN'}</span></td>
-                        <td><span class="badge ${statusClass}">${priorityDisplay}</span></td>
-                        <td>${call.assignedToName || call.assignedTo || 'Unassigned'}</td>
-                        <td>${call.createdAt ? new Date(call.createdAt).toLocaleDateString() : 'N/A'}</td>
+                        <td>${call.supportLevel || 'L1'}</td>
+                        <td>${new Date(call.createdAt).toLocaleDateString()}</td>
                         <td>
-                            <div class="table-actions">
-                                ${call.status === 'OPEN' || call.status === 'PENDING' ? `
-                                    <button class="btn-table btn-assign" onclick="openAssignModal('${ticketNum}')">
-                                        Assign
-                                    </button>
-                                ` : ''}
-                                <button class="btn-table btn-view" onclick="viewTicket('${ticketNum}')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
+                            <button class="btn-table btn-view" onclick="viewTicket('${call.ticketNumber}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
                         </td>
                     </tr>
                 `;
             });
             
-            html += '</tbody></table>';
-            document.getElementById('tableContent').innerHTML = html;
-        }
-        
-        async function loadCustomers() {
-            try {
-                let response = await fetch(`${API_BASE_URL}/admin/customers`, {
-                    headers: { 'Authorization': `Bearer ${currentToken}` }
-                });
-                
-                let data;
-                
-                if (response.ok) {
-                    data = await response.json();
-                    if (data.success) {
-                        renderCustomersTable(data.data || []);
-                        return;
-                    }
-                }
-                
-                // If admin endpoint fails, show mock data
-                console.log('Admin customers endpoint not available, showing mock data');
-                renderCustomersTable(getMockCustomers());
-                
-            } catch (error) {
-                console.error('Error loading customers:', error);
-                renderCustomersTable(getMockCustomers());
-            }
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('callsTable').innerHTML = html;
         }
         
         function renderCustomersTable(customers) {
-            document.getElementById('tableTitle').textContent = 'All Customers';
-            
             if (customers.length === 0) {
-                document.getElementById('tableContent').innerHTML = `
+                document.getElementById('customersTable').innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-users"></i>
                         <p>No customers found</p>
@@ -1273,87 +705,41 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Customer ID</th>
                             <th>Name</th>
-                            <th>Contact</th>
-                            <th>Location</th>
+                            <th>Email</th>
+                            <th>Phone</th>
                             <th>Status</th>
-                            <th>Registered</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
             
             customers.forEach(customer => {
-                const statusClass = customer.verified ? 'badge-verified' : 'badge-unverified';
-                const statusText = customer.verified ? 'Verified' : 'Pending';
+                const statusBadge = customer.verified ? 
+                    '<span class="badge badge-completed">Verified</span>' : 
+                    '<span class="badge badge-pending">Pending</span>';
                 
                 html += `
                     <tr>
-                        <td>${customer.customerId}</td>
-                        <td>${customer.firstName} ${customer.lastName}</td>
-                        <td>
-                            ${customer.email}<br>
-                            <small>${customer.phone}</small>
-                        </td>
-                        <td>${customer.city || 'N/A'}, ${customer.state || 'N/A'}</td>
-                        <td><span class="badge ${statusClass}">${statusText}</span></td>
-                        <td>${new Date(customer.registeredAt).toLocaleDateString()}</td>
-                        <td>
-                            <div class="table-actions">
-                                ${!customer.verified ? `
-                                    <button class="btn-table btn-verify" onclick="openVerifyModal('${customer.customerId}')">
-                                        Verify
-                                    </button>
-                                ` : ''}
-                                <button class="btn-table btn-delete" onclick="deleteCustomer('${customer.customerId}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
+                        <td>${customer.firstName + ' ' + customer.lastName}</td>
+                        <td>${customer.email}</td>
+                        <td>${customer.phone}</td>
+                        <td>${statusBadge}</td>
                     </tr>
                 `;
             });
             
-            html += '</tbody></table>';
-            document.getElementById('tableContent').innerHTML = html;
-        }
-        
-        async function loadAgents() {
-            try {
-                let response = await fetch(`${API_BASE_URL}/admin/agents`, {
-                    headers: { 'Authorization': `Bearer ${currentToken}` }
-                });
-                
-                let data;
-                
-                if (response.ok) {
-                    data = await response.json();
-                    if (data.success) {
-                        agentsList = data.data || [];
-                        renderAgentsTable(agentsList);
-                        return;
-                    }
-                }
-                
-                // If admin endpoint fails, show mock data
-                console.log('Admin agents endpoint not available, showing mock data');
-                agentsList = getMockAgents();
-                renderAgentsTable(agentsList);
-                
-            } catch (error) {
-                console.error('Error loading agents:', error);
-                agentsList = getMockAgents();
-                renderAgentsTable(agentsList);
-            }
+            html += `
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('customersTable').innerHTML = html;
         }
         
         function renderAgentsTable(agents) {
-            document.getElementById('tableTitle').textContent = 'All Agents';
-            
             if (agents.length === 0) {
-                document.getElementById('tableContent').innerHTML = `
+                document.getElementById('agentsTable').innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-headset"></i>
                         <p>No agents found</p>
@@ -1370,287 +756,34 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            <th>Status</th>
+                            <th>Specialization</th>
                         </tr>
                     </thead>
                     <tbody>
             `;
             
             agents.forEach(agent => {
-                const statusClass = agent.active ? 'badge-active' : 'badge-inactive';
-                
                 html += `
                     <tr>
                         <td>${agent.agentId}</td>
-                        <td>${agent.fullName}</td>
+                        <td>${agent.firstName + ' ' + agent.lastName}</td>
                         <td>${agent.email}</td>
-                        <td>${agent.phone || 'N/A'}</td>
-                        <td><span class="badge ${statusClass}">${agent.active ? 'Active' : 'Inactive'}</span></td>
+                        <td>${agent.phone}</td>
+                        <td>${agent.specialization || 'General'}</td>
                     </tr>
                 `;
             });
             
-            html += '</tbody></table>';
-            document.getElementById('tableContent').innerHTML = html;
-        }
-        
-        async function loadPendingVerification() {
-            try {
-                let response = await fetch(`${API_BASE_URL}/admin/customers/pending`, {
-                    headers: { 'Authorization': `Bearer ${currentToken}` }
-                });
-                
-                let data;
-                
-                if (response.ok) {
-                    data = await response.json();
-                    if (data.success) {
-                        renderPendingVerificationTable(data.data || []);
-                        return;
-                    }
-                }
-                
-                // If admin endpoint fails, show mock data
-                console.log('Admin pending customers endpoint not available, showing mock data');
-                const pendingCustomers = getMockCustomers().filter(c => !c.verified);
-                renderPendingVerificationTable(pendingCustomers);
-                
-            } catch (error) {
-                console.error('Error loading pending verification:', error);
-                const pendingCustomers = getMockCustomers().filter(c => !c.verified);
-                renderPendingVerificationTable(pendingCustomers);
-            }
-        }
-        
-        function renderPendingVerificationTable(customers) {
-            document.getElementById('tableTitle').textContent = 'Pending Verification';
-            
-            if (customers.length === 0) {
-                document.getElementById('tableContent').innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-check-circle"></i>
-                        <p>No pending verifications</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Customer ID</th>
-                            <th>Name</th>
-                            <th>Contact</th>
-                            <th>Documents</th>
-                            <th>Registered</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            html += `
+                    </tbody>
+                </table>
             `;
             
-            customers.forEach(customer => {
-                const docCount = customer.verificationDocuments ? customer.verificationDocuments.length : 0;
-                
-                html += `
-                    <tr>
-                        <td>${customer.customerId}</td>
-                        <td>${customer.firstName} ${customer.lastName}</td>
-                        <td>
-                            ${customer.email}<br>
-                            <small>${customer.phone}</small>
-                        </td>
-                        <td>${docCount} document(s)</td>
-                        <td>${new Date(customer.registeredAt).toLocaleDateString()}</td>
-                        <td>
-                            <div class="table-actions">
-                                <button class="btn-table btn-verify" onclick="openVerifyModal('${customer.customerId}')">
-                                    Verify
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            html += '</tbody></table>';
-            document.getElementById('tableContent').innerHTML = html;
+            document.getElementById('agentsTable').innerHTML = html;
         }
         
         function viewTicket(ticketNumber) {
-            // Find the ticket in the current data
-            fetch(`${API_BASE_URL}/tickets/${ticketNumber}`, {
-                headers: { 'Authorization': `Bearer ${currentToken}` }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const ticket = data.data;
-                    const details = `
-Ticket Number: ${ticket.ticketNumber}
-Customer: ${ticket.customerName}
-Phone: ${ticket.customerPhone}
-Email: ${ticket.customerEmail}
-Status: ${ticket.status}
-Category: ${ticket.category}
-Issue: ${ticket.issueDescription}
-Created: ${new Date(ticket.createdAt).toLocaleString()}
-                    `;
-                    alert(details);
-                }
-            })
-            .catch(error => console.error('Error viewing ticket:', error));
-        }
-        
-        function openAssignModal(callId) {
-            document.getElementById('assignCallId').value = callId;
-            const select = document.getElementById('assignAgentId');
-            select.innerHTML = '<option value="">Select Agent</option>';
-            
-            agentsList.forEach(agent => {
-                const option = document.createElement('option');
-                option.value = agent.agentId;
-                option.textContent = `${agent.fullName} (${agent.agentId})`;
-                select.appendChild(option);
-            });
-            
-            document.getElementById('assignModal').classList.add('active');
-        }
-        
-        async function assignCall() {
-            const callId = document.getElementById('assignCallId').value;
-            const agentId = document.getElementById('assignAgentId').value;
-            
-            if (!agentId) {
-                showAlert('Please select an agent', 'error');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/tickets/${callId}/assign`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${currentToken}`
-                    },
-                    body: JSON.stringify({ agentId })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    closeModal('assignModal');
-                    showAlert('Call assigned successfully', 'success');
-                    refreshData();
-                } else {
-                    showAlert(data.message || 'Failed to assign call', 'error');
-                }
-            } catch (error) {
-                showAlert('Network error', 'error');
-            }
-        }
-        
-        function openVerifyModal(customerId) {
-            document.getElementById('verifyCustomerId').value = customerId;
-            document.getElementById('verifyModal').classList.add('active');
-        }
-        
-        async function verifyCustomer() {
-            const customerId = document.getElementById('verifyCustomerId').value;
-            const verified = document.getElementById('verifyDecision').value === 'true';
-            const notes = document.getElementById('verifyNotes').value;
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/admin/customers/verify`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${currentToken}`
-                    },
-                    body: JSON.stringify({
-                        customerId,
-                        verified,
-                        verificationNotes: notes
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    closeModal('verifyModal');
-                    showAlert(verified ? 'Customer verified successfully' : 'Customer rejected', 'success');
-                    refreshData();
-                } else {
-                    showAlert(data.message || 'Failed to verify customer', 'error');
-                }
-            } catch (error) {
-                showAlert('Network error', 'error');
-            }
-        }
-        
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-        
-        async function deleteCall(callId) {
-            if (!confirm('Are you sure you want to delete this call?')) return;
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/tickets/${callId}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${currentToken}` }
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showAlert('Call deleted successfully', 'success');
-                    refreshData();
-                } else {
-                    showAlert(data.message || 'Failed to delete call', 'error');
-                }
-            } catch (error) {
-                showAlert('Network error', 'error');
-            }
-        }
-        
-        async function deleteCustomer(customerId) {
-            if (!confirm('Are you sure you want to delete this customer?')) return;
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/customers/${customerId}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${currentToken}` }
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showAlert('Customer deleted successfully', 'success');
-                    refreshData();
-                } else {
-                    showAlert(data.message || 'Failed to delete customer', 'error');
-                }
-            } catch (error) {
-                showAlert('Network error', 'error');
-            }
-        }
-        
-        function refreshData() {
-            if (currentTab === 'dashboard') {
-                loadDashboard();
-            } else if (currentTab === 'calls') {
-                loadCalls(false);
-            } else if (currentTab === 'pending-calls') {
-                loadCalls(true);
-            } else if (currentTab === 'customers') {
-                loadCustomers();
-            } else if (currentTab === 'agents') {
-                loadAgents();
-            } else if (currentTab === 'verification') {
-                loadPendingVerification();
-            }
+            showAlert(`Viewing ticket: ${ticketNumber}`, 'success');
         }
         
         function logout() {
@@ -1659,18 +792,25 @@ Created: ${new Date(ticket.createdAt).toLocaleString()}
             window.location.href = 'admin-login.html';
         }
         
-        function showAlert(message, type) {
-            const alertBox = document.getElementById('alertBox');
-            alertBox.className = `alert alert-${type}`;
-            alertBox.textContent = message;
-            alertBox.style.display = 'block';
-            setTimeout(() => {
-                alertBox.style.display = 'none';
-            }, 5000);
+        function refreshData() {
+            showTab(currentTab);
         }
         
-        // Load initial data
-        loadDashboard();
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <strong>${type === 'success' ? 'Success' : 'Error'}:</strong> ${message}
+                <button onclick="this.parentElement.remove()" style="float: right; margin-left: 10px;">&times;</button>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentElement) {
+                    alertDiv.parentElement.removeChild(alertDiv);
+                }
+            }, 3000);
+        }
     </script>
 </body>
 </html>
