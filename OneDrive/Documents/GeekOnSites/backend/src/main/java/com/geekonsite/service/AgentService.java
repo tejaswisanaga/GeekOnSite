@@ -62,12 +62,7 @@ public class AgentService {
     public ApiResponse login(AgentLoginRequest request) {
         try {
             String username = request.getAgentIdOrEmail();
-            
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username + ":AGENT", request.getPassword())
-            );
-            
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String password = request.getPassword();
             
             Optional<Agent> agentOpt = agentRepository.findByAgentId(username);
             if (agentOpt.isEmpty()) {
@@ -76,27 +71,32 @@ public class AgentService {
             
             if (agentOpt.isPresent()) {
                 Agent agent = agentOpt.get();
-                agent.setLastLogin(LocalDateTime.now());
-                agentRepository.save(agent);
                 
-                String token = jwtUtils.generateJwtToken(agent.getAgentId(), "AGENT");
-                
-                LoginResponse response = new LoginResponse(
-                    token,
-                    agent.getId(),
-                    agent.getAgentId(),
-                    agent.getEmail(),
-                    agent.getFirstName(),
-                    agent.getLastName(),
-                    List.of("AGENT")
-                );
-                
-                return ApiResponse.success("Login successful", response);
+                // Simple password validation
+                if (passwordEncoder.matches(password, agent.getPassword())) {
+                    agent.setLastLogin(LocalDateTime.now());
+                    agentRepository.save(agent);
+                    
+                    // Generate simple token
+                    String token = "agent-token-" + agent.getAgentId() + "-" + System.currentTimeMillis();
+                    
+                    LoginResponse response = new LoginResponse(
+                        token,
+                        agent.getId(),
+                        agent.getAgentId(),
+                        agent.getEmail(),
+                        agent.getFirstName(),
+                        agent.getLastName(),
+                        List.of("AGENT")
+                    );
+                    
+                    return ApiResponse.success("Login successful", response);
+                }
             }
             
-            return ApiResponse.error("Agent not found");
-        } catch (Exception e) {
             return ApiResponse.error("Invalid credentials");
+        } catch (Exception e) {
+            return ApiResponse.error("Login failed: " + e.getMessage());
         }
     }
     
