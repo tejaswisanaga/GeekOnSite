@@ -70,6 +70,29 @@ public class TicketController {
     }
     
     /**
+     * Simple test endpoint to verify public access works
+     * GET /api/public/test
+     */
+    @GetMapping("/public/test")
+    public ResponseEntity<ApiResponse> testPublicAccess() {
+        return ResponseEntity.ok(ApiResponse.success("Public access works!"));
+    }
+    
+    /**
+     * Temporary public endpoint to test tickets access without authentication
+     * GET /api/public/tickets
+     */
+    @GetMapping("/public/tickets")
+    public ResponseEntity<ApiResponse> getPublicTickets() {
+        try {
+            List<SupportTicket> tickets = supportTicketRepository.findAll();
+            return ResponseEntity.ok(ApiResponse.success("Public tickets retrieved", tickets));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(ApiResponse.error("Failed to retrieve tickets: " + e.getMessage()));
+        }
+    }
+    
+    /**
      * 3️⃣ Get Ticket by Phone
      * GET /api/tickets/phone/{phone}
      */
