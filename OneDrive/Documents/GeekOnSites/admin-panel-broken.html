@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - GeekOnsites</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-color, #1a1a1a);
+            color: var(--text-color, #e0e0e0);
+            min-height: 100vh;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #121212;
+            border-right: 1px solid #2a2a2a;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #2a2a2a;
+            text-align: center;
+        }
+        
+        .sidebar-header h2 {
+            color: #d4af37;
+            font-size: 1.3rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .sidebar-header p {
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        
+        .admin-info {
+            padding: 1.5rem;
+            border-bottom: 1px solid #2a2a2a;
+            text-align: center;
+        }
+        
+        .admin-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #d4af37 0%, #b78d3f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: #1a1a1a;
+        }
+        
+        .admin-name {
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+        
+        .admin-role {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        
+        .nav-menu {
+            list-style: none;
+            padding: 1rem 0;
+        }
+        
+        .nav-menu li {
+            margin: 0.25rem 0;
+        }
+        
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.5rem;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+            border-right: 3px solid #d4af37;
+        }
+        
+        .nav-menu i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #2a2a2a;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #121212;
+        }
+        
+        .btn-logout {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-logout:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            background: #0a0a0a;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            color: #fff;
+            font-size: 1.8rem;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn-refresh, .btn-primary {
+            padding: 0.625rem 1rem;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            color: #e0e0e0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #d4af37;
+            border: none;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+        
+        .btn-refresh:hover {
+            background: #3a3a3a;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            border-color: #d4af37;
+            transform: translateY(-2px);
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .stat-icon.calls { background: rgba(212, 175, 55, 0.2); color: #d4af37; }
+        .stat-icon.pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .stat-icon.progress { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+        .stat-icon.completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .stat-icon.agents { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+        .stat-icon.customers { background: rgba(236, 72, 153, 0.2); color: #ec4899; }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 0.5rem;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            border-radius: 0.5rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tab:hover {
+            color: #e0e0e0;
+            background: #2a2a2a;
+        }
+        
+        .tab.active {
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        /* Table */
+        .table-container {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        
+        .table-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-header h3 {
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            border-radius: 0.5rem;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #e0e0e0;
+            outline: none;
+            width: 200px;
+        }
+        
+        .search-box input::placeholder {
+            color: #94a3b8;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        
+        th {
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+        
+        td {
+            color: #e0e0e0;
+        }
+        
+        tr:hover {
+            background: rgba(42, 42, 42, 0.5);
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .badge-progress { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+        .badge-completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge-verified { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge-unverified { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .badge-rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .badge-active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .badge-inactive { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-table {
+            padding: 0.375rem 0.75rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-edit {
+            background: #60a5fa;
+            color: #fff;
+        }
+        
+        .btn-verify {
+            background: #10b981;
+            color: #fff;
+        }
+        
+        .btn-assign {
+            background: #8b5cf6;
+            color: #fff;
+        }
+        
+        .btn-delete {
+            background: #ef4444;
+            color: #fff;
+        }
+        
+        .btn-table:hover {
+            opacity: 0.8;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #94a3b8;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h3 {
+            color: #fff;
+        }
+        
+        .btn-close {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0a0a0a;
+            border: 1px solid #2a2a2a;
+            color: #fff;
+            border-radius: 0.5rem;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .btn-cancel {
+            padding: 0.625rem 1.25rem;
+            background: transparent;
+            border: 1px solid #2a2a2a;
+            color: #94a3b8;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .btn-save {
+            padding: 0.625rem 1.25rem;
+            background: #d4af37;
+            border: none;
+            color: #1a1a1a;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #10b981;
+            display: block;
+        }
+        
+        .alert-error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-shield-alt"></i> GeekOnsites</h2>
+                <p>Admin Control Panel</p>
+            </div>
+            
+            <div class="admin-info">
+                <div class="admin-avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="admin-name" id="adminName">Loading...</div>
+                <div class="admin-role">Administrator</div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#" class="active" onclick="showTab('dashboard')">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </a></li>
+                <li><a href="#" onclick="showTab('calls')">
+                    <i class="fas fa-phone"></i> All Calls
+                </a></li>
+                <li><a href="#" onclick="showTab('pending-calls')">
+                    <i class="fas fa-clock"></i> Pending Calls
+                </a></li>
+                <li><a href="#" onclick="showTab('customers')">
+                    <i class="fas fa-users"></i> Customers
+                </a></li>
+                <li><a href="#" onclick="showTab('agents')">
+                    <i class="fas fa-headset"></i> Agents
+                </a></li>
+                <li><a href="#" onclick="showTab('verification')">
+                    <i class="fas fa-id-card"></i> Pending Verification
+                </a></li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div id="alertBox" class="alert"></div>
+            
+            <div class="page-header">
+                <h1 id="pageTitle">Admin Dashboard</h1>
+                <div class="header-actions">
+                    <button class="btn-refresh" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Dashboard Stats -->
+            <div id="dashboardView">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon calls">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalCalls">0</div>
+                        <div class="stat-label">Total Calls</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon pending">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="pendingCalls">0</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon progress">
+                                <i class="fas fa-spinner"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="inProgressCalls">0</div>
+                        <div class="stat-label">In Progress</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon completed">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="completedCalls">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon agents">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalAgents">0</div>
+                        <div class="stat-label">Total Agents</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon customers">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalCustomers">0</div>
+                        <div class="stat-label">Total Customers</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Data Tables -->
+            <div class="table-container" id="tableView">
+                <div class="table-header">
+                    <h3 id="tableTitle">All Calls</h3>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search...">
+                    </div>
+                </div>
+                <div id="tableContent">
+                    <!-- Dynamic table content -->
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Create Call Modal -->
+    <div class="modal" id="createCallModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Call</h3>
+                <button class="btn-close" onclick="closeModal('createCallModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="callCustomerId">Customer ID</label>
+                    <input type="text" id="callCustomerId" placeholder="Enter customer ID">
+                </div>
+                <div class="form-group">
+                    <label for="callPriority">Priority</label>
+                    <select id="callPriority">
+                        <option value="LOW">Low</option>
+                        <option value="MEDIUM" selected>Medium</option>
+                        <option value="HIGH">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="callIssue">Issue Description</label>
+                    <textarea id="callIssue" placeholder="Describe the issue..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('createCallModal')">Cancel</button>
+                <button class="btn-save" onclick="createCall()">Create Call</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Assign Agent Modal -->
+    <div class="modal" id="assignModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Assign Call to Agent</h3>
+                <button class="btn-close" onclick="closeModal('assignModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="assignCallId">
+                <div class="form-group">
+                    <label for="assignAgentId">Select Agent</label>
+                    <select id="assignAgentId">
+                        <option value="">Loading agents...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('assignModal')">Cancel</button>
+                <button class="btn-save" onclick="assignCall()">Assign</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Verify Customer Modal -->
+    <div class="modal" id="verifyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Verify Customer</h3>
+                <button class="btn-close" onclick="closeModal('verifyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="verifyCustomerId">
+                <div class="form-group">
+                    <label>Verification Decision</label>
+                    <select id="verifyDecision">
+                        <option value="true">Approve - Verify Customer</option>
+                        <option value="false">Reject - Decline Customer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="verifyNotes">Verification Notes</label>
+                    <textarea id="verifyNotes" placeholder="Enter verification notes..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('verifyModal')">Cancel</button>
+                <button class="btn-save" onclick="verifyCustomer()">Submit</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
+        let currentToken = localStorage.getItem('adminToken');
+        let adminInfo = JSON.parse(localStorage.getItem('adminInfo') || '{}');
+        let currentTab = 'dashboard';
+        let agentsList = [];
+        
+        // Check authentication
+        console.log('Current token:', currentToken ? 'Token exists' : 'No token');
+        if (!currentToken) {
+            console.log('No token found, redirecting to login');
+            window.location.href = 'admin-login.html';
+        }
+        
+        // Set admin info
+        console.log('Admin info from localStorage:', adminInfo);
+        document.getElementById('adminName').textContent = 
+            adminInfo.firstName + ' ' + adminInfo.lastName || 'Administrator';
+        
+        async function loadDashboard() {
+            try {
+                // Load tickets instead of calls for stats
+                const ticketsResponse = await fetch(`${API_BASE_URL}/tickets`, {
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+                
+                const ticketsData = await ticketsResponse.json();
+                
+                if (ticketsData.success) {
+                    const tickets = ticketsData.data || [];
+                    const totalTickets = tickets.length;
+                    const openTickets = tickets.filter(t => t.status === 'OPEN').length;
+                    const inProgressTickets = tickets.filter(t => t.status === 'IN_PROGRESS').length;
+                    const completedTickets = tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED').length;
+                    
+                    // Load agents count
+                    const agentsResponse = await fetch(`${API_BASE_URL}/admin/agents`, {
+                        headers: {
+                            'Authorization': `Bearer ${currentToken}`
+                        }
+                    });
+                    const agentsData = await agentsResponse.json();
+                    const totalAgents = agentsData.success ? (agentsData.data || []).length : 0;
+                    
+                    // Load customers count
+                    const customersResponse = await fetch(`${API_BASE_URL}/admin/customers`, {
+                        headers: {
+                            'Authorization': `Bearer ${currentToken}`
+                        }
+                    });
+                    const customersData = await customersResponse.json();
+                    const totalCustomers = customersData.success ? (customersData.data || []).length : 0;
+                    
+                    updateStats({
+                        totalCalls: totalTickets,
+                        pendingCalls: openTickets,
+                        inProgressCalls: inProgressTickets,
+                        completedCalls: completedTickets,
+                        totalAgents: totalAgents,
+                        totalCustomers: totalCustomers
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+        
+        function updateStats(stats) {
+            document.getElementById('totalCalls').textContent = stats.totalCalls || 0;
+            document.getElementById('pendingCalls').textContent = stats.pendingCalls || 0;
+            document.getElementById('inProgressCalls').textContent = stats.inProgressCalls || 0;
+            document.getElementById('completedCalls').textContent = stats.completedCalls || 0;
+            document.getElementById('totalAgents').textContent = stats.totalAgents || 0;
+            document.getElementById('totalCustomers').textContent = stats.totalCustomers || 0;
+        }
+        
+        async function showTab(tab) {
+            currentTab = tab;
+            
+            // Update active nav
+            document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update page title
+            const titles = {
+                'dashboard': 'Admin Dashboard',
+                'calls': 'All Calls',
+                'pending-calls': 'Pending Calls',
+                'customers': 'All Customers',
+                'agents': 'All Agents',
+                'verification': 'Pending Verification'
+            };
+            document.getElementById('pageTitle').textContent = titles[tab];
+            
+            // Show/hide views
+            document.getElementById('dashboardView').style.display = 
+                tab === 'dashboard' ? 'block' : 'none';
+            document.getElementById('tableView').style.display = 
+                tab !== 'dashboard' ? 'block' : 'none';
+            
+            // Load data
+            if (tab === 'dashboard') {
+                loadDashboard();
+            } else if (tab === 'calls' || tab === 'pending-calls') {
+                await loadCalls(tab === 'pending-calls');
+            } else if (tab === 'customers') {
+                await loadCustomers();
+            } else if (tab === 'agents') {
+                await loadAgents();
+            } else if (tab === 'verification') {
+                await loadPendingVerification();
+            }
+        }
+        
+        async function loadCalls(pendingOnly = false) {
+            try {
+                // Use tickets endpoint instead of calls
+                const url = `${API_BASE_URL}/tickets`;
+                
+                console.log('Loading tickets from:', url);
+                console.log('Using token:', currentToken ? 'Bearer ' + currentToken.substring(0, 20) + '...' : 'No token');
+                
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                if (response.status === 403 || response.status === 401) {
+                    console.error('Authentication failed - token may be expired');
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('adminInfo');
+                    window.location.href = 'admin-login.html';
+                    return;
+                }
+                
+                const data = await response.json();
+                console.log('Tickets data:', data);
+                
+                if (data.success) {
+                    let tickets = data.data || [];
+                    console.log('Loaded tickets:', tickets);
+                    // Filter pending tickets if needed
+                    if (pendingOnly) {
+                        tickets = tickets.filter(t => t.status === 'OPEN' || t.status === 'PENDING');
+                    }
+                    renderCallsTable(tickets);
+                } else {
+                    console.error('Failed to load tickets:', data.message);
+                    document.getElementById('tableContent').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>Error loading tickets: ${data.message}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading tickets:', error);
+                document.getElementById('tableContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Error loading tickets. Please try again.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderCallsTable(calls) {
+            document.getElementById('tableTitle').textContent = currentTab === 'pending-calls' ? 
+                'Pending Calls' : 'All Calls';
+            
+            if (calls.length === 0) {
+                document.getElementById('tableContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No calls found</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ticket #</th>
+                            <th>Customer</th>
+                            <th>Status</th>
+                            <th>Support Level</th>
+                            <th>Agent</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            calls.forEach(call => {
+                // Map ticket status to badge classes
+                const statusClass = {
+                    'OPEN': 'badge-pending',
+                    'IN_PROGRESS': 'badge-progress',
+                    'RESOLVED': 'badge-completed',
+                    'CLOSED': 'badge-completed',
+                    'ESCALATED': 'badge-rejected',
+                    'WAITING_CUSTOMER': 'badge-pending'
+                }[call.status] || 'badge-pending';
+                
+                // Map supportLevel to priority display
+                const priorityMap = {
+                    'L1_FIRST_LINE': 'L1 - Basic',
+                    'L2_SECOND_LINE': 'L2 - Advanced',
+                    'L3_SPECIALIST': 'L3 - Specialist'
+                };
+                const priorityDisplay = priorityMap[call.supportLevel] || call.supportLevel || 'L1';
+                
+                // Use ticketNumber instead of callId
+                const ticketNum = call.ticketNumber || call.callId || call.id;
+                
+                html += `
+                    <tr>
+                        <td>${ticketNum}</td>
+                        <td>
+                            ${call.customerName || 'N/A'}<br>
+                            <small>${call.customerPhone || 'N/A'}</small>
+                        </td>
+                        <td><span class="badge ${statusClass}">${call.status || 'OPEN'}</span></td>
+                        <td><span class="badge ${statusClass}">${priorityDisplay}</span></td>
+                        <td>${call.assignedToName || call.assignedTo || 'Unassigned'}</td>
+                        <td>${call.createdAt ? new Date(call.createdAt).toLocaleDateString() : 'N/A'}</td>
+                        <td>
+                            <div class="table-actions">
+                                ${call.status === 'OPEN' || call.status === 'PENDING' ? `
+                                    <button class="btn-table btn-assign" onclick="openAssignModal('${ticketNum}')">
+                                        Assign
+                                    </button>
+                                ` : ''}
+                                <button class="btn-table btn-view" onclick="viewTicket('${ticketNum}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('tableContent').innerHTML = html;
+        }
+        
+        async function loadCustomers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/customers`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderCustomersTable(data.data || []);
+                }
+            } catch (error) {
+                console.error('Error loading customers:', error);
+            }
+        }
+        
+        function renderCustomersTable(customers) {
+            document.getElementById('tableTitle').textContent = 'All Customers';
+            
+            if (customers.length === 0) {
+                document.getElementById('tableContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>No customers found</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Registered</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            customers.forEach(customer => {
+                const statusClass = customer.verified ? 'badge-verified' : 'badge-unverified';
+                const statusText = customer.verified ? 'Verified' : 'Pending';
+                
+                html += `
+                    <tr>
+                        <td>${customer.customerId}</td>
+                        <td>${customer.firstName} ${customer.lastName}</td>
+                        <td>
+                            ${customer.email}<br>
+                            <small>${customer.phone}</small>
+                        </td>
+                        <td>${customer.city || 'N/A'}, ${customer.state || 'N/A'}</td>
+                        <td><span class="badge ${statusClass}">${statusText}</span></td>
+                        <td>${new Date(customer.registeredAt).toLocaleDateString()}</td>
+                        <td>
+                            <div class="table-actions">
+                                ${!customer.verified ? `
+                                    <button class="btn-table btn-verify" onclick="openVerifyModal('${customer.customerId}')">
+                                        Verify
+                                    </button>
+                                ` : ''}
+                                <button class="btn-table btn-delete" onclick="deleteCustomer('${customer.customerId}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('tableContent').innerHTML = html;
+        }
+        
+        async function loadAgents() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/agents`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    agentsList = data.data || [];
+                    renderAgentsTable(agentsList);
+                }
+            } catch (error) {
+                console.error('Error loading agents:', error);
+            }
+        }
+        
+        function renderAgentsTable(agents) {
+            document.getElementById('tableTitle').textContent = 'All Agents';
+            
+            if (agents.length === 0) {
+                document.getElementById('tableContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-headset"></i>
+                        <p>No agents found</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Agent ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            agents.forEach(agent => {
+                const statusClass = agent.active ? 'badge-active' : 'badge-inactive';
+                
+                html += `
+                    <tr>
+                        <td>${agent.agentId}</td>
+                        <td>${agent.fullName}</td>
+                        <td>${agent.email}</td>
+                        <td>${agent.phone || 'N/A'}</td>
+                        <td><span class="badge ${statusClass}">${agent.active ? 'Active' : 'Inactive'}</span></td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('tableContent').innerHTML = html;
+        }
+        
+        async function loadPendingVerification() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/customers/pending`, {
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderPendingVerificationTable(data.data || []);
+                }
+            } catch (error) {
+                console.error('Error loading pending verification:', error);
+            }
+        }
+        
+        function renderPendingVerificationTable(customers) {
+            document.getElementById('tableTitle').textContent = 'Pending Verification';
+            
+            if (customers.length === 0) {
+                document.getElementById('tableContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <p>No pending verifications</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer ID</th>
+                            <th>Name</th>
+                            <th>Contact</th>
+                            <th>Documents</th>
+                            <th>Registered</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            customers.forEach(customer => {
+                const docCount = customer.verificationDocuments ? customer.verificationDocuments.length : 0;
+                
+                html += `
+                    <tr>
+                        <td>${customer.customerId}</td>
+                        <td>${customer.firstName} ${customer.lastName}</td>
+                        <td>
+                            ${customer.email}<br>
+                            <small>${customer.phone}</small>
+                        </td>
+                        <td>${docCount} document(s)</td>
+                        <td>${new Date(customer.registeredAt).toLocaleDateString()}</td>
+                        <td>
+                            <div class="table-actions">
+                                <button class="btn-table btn-verify" onclick="openVerifyModal('${customer.customerId}')">
+                                    Verify
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('tableContent').innerHTML = html;
+        }
+        
+        function viewTicket(ticketNumber) {
+            // Find the ticket in the current data
+            fetch(`${API_BASE_URL}/tickets/${ticketNumber}`, {
+                headers: { 'Authorization': `Bearer ${currentToken}` }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const ticket = data.data;
+                    const details = `
+Ticket Number: ${ticket.ticketNumber}
+Customer: ${ticket.customerName}
+Phone: ${ticket.customerPhone}
+Email: ${ticket.customerEmail}
+Status: ${ticket.status}
+Category: ${ticket.category}
+Issue: ${ticket.issueDescription}
+Created: ${new Date(ticket.createdAt).toLocaleString()}
+                    `;
+                    alert(details);
+                }
+            })
+            .catch(error => console.error('Error viewing ticket:', error));
+        }
+        
+        function openAssignModal(callId) {
+            document.getElementById('assignCallId').value = callId;
+            const select = document.getElementById('assignAgentId');
+            select.innerHTML = '<option value="">Select Agent</option>';
+            
+            agentsList.forEach(agent => {
+                const option = document.createElement('option');
+                option.value = agent.agentId;
+                option.textContent = `${agent.fullName} (${agent.agentId})`;
+                select.appendChild(option);
+            });
+            
+            document.getElementById('assignModal').classList.add('active');
+        }
+        
+        async function assignCall() {
+            const callId = document.getElementById('assignCallId').value;
+            const agentId = document.getElementById('assignAgentId').value;
+            
+            if (!agentId) {
+                showAlert('Please select an agent', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/tickets/${callId}/assign`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify({ agentId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    closeModal('assignModal');
+                    showAlert('Call assigned successfully', 'success');
+                    refreshData();
+                } else {
+                    showAlert(data.message || 'Failed to assign call', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error', 'error');
+            }
+        }
+        
+        function openVerifyModal(customerId) {
+            document.getElementById('verifyCustomerId').value = customerId;
+            document.getElementById('verifyModal').classList.add('active');
+        }
+        
+        async function verifyCustomer() {
+            const customerId = document.getElementById('verifyCustomerId').value;
+            const verified = document.getElementById('verifyDecision').value === 'true';
+            const notes = document.getElementById('verifyNotes').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/admin/customers/verify`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}`
+                    },
+                    body: JSON.stringify({
+                        customerId,
+                        verified,
+                        verificationNotes: notes
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    closeModal('verifyModal');
+                    showAlert(verified ? 'Customer verified successfully' : 'Customer rejected', 'success');
+                    refreshData();
+                } else {
+                    showAlert(data.message || 'Failed to verify customer', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error', 'error');
+            }
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        
+        async function deleteCall(callId) {
+            if (!confirm('Are you sure you want to delete this call?')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/tickets/${callId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('Call deleted successfully', 'success');
+                    refreshData();
+                } else {
+                    showAlert(data.message || 'Failed to delete call', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error', 'error');
+            }
+        }
+        
+        async function deleteCustomer(customerId) {
+            if (!confirm('Are you sure you want to delete this customer?')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/customers/${customerId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${currentToken}` }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('Customer deleted successfully', 'success');
+                    refreshData();
+                } else {
+                    showAlert(data.message || 'Failed to delete customer', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error', 'error');
+            }
+        }
+        
+        function refreshData() {
+            if (currentTab === 'dashboard') {
+                loadDashboard();
+            } else if (currentTab === 'calls') {
+                loadCalls(false);
+            } else if (currentTab === 'pending-calls') {
+                loadCalls(true);
+            } else if (currentTab === 'customers') {
+                loadCustomers();
+            } else if (currentTab === 'agents') {
+                loadAgents();
+            } else if (currentTab === 'verification') {
+                loadPendingVerification();
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminInfo');
+            window.location.href = 'admin-login.html';
+        }
+        
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.className = `alert alert-${type}`;
+            alertBox.textContent = message;
+            alertBox.style.display = 'block';
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Load initial data
+        loadDashboard();
+    </script>
+</body>
+</html>
