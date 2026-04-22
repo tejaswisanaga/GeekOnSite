@@ -49,6 +49,12 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
     
+    @GetMapping("/admin/check")
+    public ResponseEntity<ApiResponse> checkAdmin() {
+        ApiResponse response = adminService.createDefaultAdmin();
+        return ResponseEntity.ok(response);
+    }
+    
     // DTO for admin registration
     public static class AdminRegistrationRequest {
         private String username;
