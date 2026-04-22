@@ -783,12 +783,14 @@
         let agentsList = [];
         
         // Check authentication
+        console.log('Current token:', currentToken ? 'Token exists' : 'No token');
         if (!currentToken) {
             console.log('No token found, redirecting to login');
             window.location.href = 'admin-login.html';
         }
         
         // Set admin info
+        console.log('Admin info from localStorage:', adminInfo);
         document.getElementById('adminName').textContent = 
             adminInfo.firstName + ' ' + adminInfo.lastName || 'Administrator';
         
