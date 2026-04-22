@@ -241,6 +241,41 @@ public class TicketController {
         }
     }
     
+    /**
+     * Public endpoint to update ticket status (for agents without Spring Security)
+     * PUT /api/public/tickets/{ticketNumber}/status
+     */
+    @PutMapping("/public/tickets/{ticketNumber}/status")
+    public ResponseEntity<?> updateTicketStatusPublic(
+            @PathVariable String ticketNumber,
+            @RequestBody Map<String, Object> request) {
+        
+        java.util.Optional<SupportTicket> ticketOpt = supportTicketRepository.findByTicketNumber(ticketNumber);
+        if (ticketOpt.isEmpty()) {
+            return ResponseEntity.ok(ApiResponse.error("Ticket not found"));
+        }
+        
+        SupportTicket ticket = ticketOpt.get();
+        String status = (String) request.get("status");
+        String notes = (String) request.get("notes");
+        
+        try {
+            SupportTicket.TicketStatus newStatus = SupportTicket.TicketStatus.valueOf(status.toUpperCase());
+            ticket.setStatus(newStatus);
+            ticket.setUpdatedAt(LocalDateTime.now());
+            
+            if (notes != null && !notes.trim().isEmpty()) {
+                ticket.addNote(notes, "agent", false);
+            }
+            
+            supportTicketRepository.save(ticket);
+            
+            return ResponseEntity.ok(ApiResponse.success("Ticket status updated successfully", ticket));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Invalid status"));
+        }
+    }
+    
     // Helper methods
     private String generateTicketNumber() {
         return "TKT" + System.currentTimeMillis();

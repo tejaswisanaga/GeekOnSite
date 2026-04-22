@@ -54,8 +54,6 @@ public class WebSecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
             "https://geekonsite-3.onrender.com",
             "https://geekonsite.onrender.com",
-            "http://localhost:3000",
-            "http://localhost:8080",
             "*"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));

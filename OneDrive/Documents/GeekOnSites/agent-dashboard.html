@@ -704,11 +704,7 @@
                 console.log('Agent Full Name:', agentFullName);
                 
                 // Fetch all tickets and filter by assigned agent
-                const response = await fetch(`${API_BASE_URL}/tickets`, {
-                    headers: {
-                        'Authorization': `Bearer ${currentToken}`
-                    }
-                });
+                const response = await fetch(`${API_BASE_URL}/public/tickets`);
                 
                 const data = await response.json();
                 
@@ -801,11 +797,10 @@
         
         async function startTicket(ticketNumber) {
             try {
-                const response = await fetch(`${API_BASE_URL}/tickets/${ticketNumber}/status`, {
+                const response = await fetch(`${API_BASE_URL}/public/tickets/${ticketNumber}/status`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${currentToken}`
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ status: 'IN_PROGRESS', notes: 'Started working on ticket' })
                 });
@@ -842,11 +837,10 @@
             try {
                 const notes = `Resolution: ${resolution}\nOutcome: ${outcome}\n${followUpRequired ? `Follow-up required: ${followUpNotes}` : 'No follow-up required'}`;
                 
-                const response = await fetch(`${API_BASE_URL}/tickets/${ticketNumber}/status`, {
+                const response = await fetch(`${API_BASE_URL}/public/tickets/${ticketNumber}/status`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${currentToken}`
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         status: 'RESOLVED',
