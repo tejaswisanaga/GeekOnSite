@@ -679,7 +679,7 @@
     </div>
     
     <script>
-        const API_BASE_URL = 'http://localhost:8080/api';
+        const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
         let currentToken = localStorage.getItem('agentToken');
         let agentInfo = JSON.parse(localStorage.getItem('agentInfo') || '{}');
         
@@ -695,7 +695,11 @@
         
         async function loadDashboard() {
             try {
-                const response = await fetch(`${API_BASE_URL}/agent/dashboard`, {
+                // Get agent ID from stored info
+                const agentId = agentInfo.username || agentInfo.agentId;
+                
+                // Fetch all tickets and filter by assigned agent
+                const response = await fetch(`${API_BASE_URL}/tickets`, {
                     headers: {
                         'Authorization': `Bearer ${currentToken}`
                     }
@@ -704,7 +708,13 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    updateDashboard(data.data);
+                    const allTickets = data.data || [];
+                    const agentTickets = allTickets.filter(ticket => 
+                        ticket.assignedTo === agentId || 
+                        ticket.assignedToName === (agentInfo.firstName + ' ' + agentInfo.lastName)
+                    );
+                    
+                    updateAgentDashboard(agentTickets);
                 } else {
                     showAlert(data.message || 'Failed to load dashboard', 'error');
                 }
@@ -713,62 +723,65 @@
             }
         }
         
-        function updateDashboard(data) {
-            const stats = data.stats;
+        function updateAgentDashboard(tickets) {
+            // Filter tickets by status
+            const pendingTickets = tickets.filter(t => t.status === 'OPEN');
+            const inProgressTickets = tickets.filter(t => t.status === 'IN_PROGRESS');
+            const completedTickets = tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED');
             
             // Update stats
-            document.getElementById('pendingCount').textContent = stats.pendingCalls || 0;
-            document.getElementById('progressCount').textContent = stats.inProgressCalls || 0;
-            document.getElementById('completedCount').textContent = stats.completedCalls || 0;
-            document.getElementById('totalCount').textContent = stats.totalCalls || 0;
+            document.getElementById('pendingCount').textContent = pendingTickets.length;
+            document.getElementById('progressCount').textContent = inProgressTickets.length;
+            document.getElementById('completedCount').textContent = completedTickets.length;
+            document.getElementById('totalCount').textContent = tickets.length;
             
-            document.getElementById('pendingBadge').textContent = stats.pendingCalls || 0;
-            document.getElementById('progressBadge').textContent = stats.inProgressCalls || 0;
-            document.getElementById('completedBadge').textContent = stats.completedCalls || 0;
+            document.getElementById('pendingBadge').textContent = pendingTickets.length;
+            document.getElementById('progressBadge').textContent = inProgressTickets.length;
+            document.getElementById('completedBadge').textContent = completedTickets.length;
             
             // Update lists
-            renderCallsList('pendingCallsList', data.pendingCalls || [], 'pending');
-            renderCallsList('progressCallsList', data.inProgressCalls || [], 'progress');
-            renderCallsList('completedCallsList', data.completedCalls || [], 'completed');
+            renderTicketsList('pendingCallsList', pendingTickets, 'pending');
+            renderTicketsList('progressCallsList', inProgressTickets, 'progress');
+            renderTicketsList('completedCallsList', completedTickets, 'completed');
         }
         
-        function renderCallsList(containerId, calls, type) {
+        function renderTicketsList(containerId, tickets, type) {
             const container = document.getElementById(containerId);
             
-            if (calls.length === 0) {
+            if (tickets.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-inbox"></i>
-                        <p>No ${type} calls</p>
+                        <p>No ${type} tickets</p>
                     </div>
                 `;
                 return;
             }
             
-            container.innerHTML = calls.map(call => `
+            container.innerHTML = tickets.map(ticket => `
                 <div class="call-item">
                     <div class="call-info">
-                        <h4>${call.customerName}</h4>
-                        <p>${call.customerPhone} | ${call.issueDescription || 'No description'}</p>
+                        <h4>${ticket.customerName || 'Unknown Customer'}</h4>
+                        <p>${ticket.customerPhone || 'No phone'} | ${ticket.issueDescription || 'No description'}</p>
                         <p style="font-size: 0.75rem; margin-top: 0.25rem;">
-                            Call ID: ${call.callId} | Created: ${new Date(call.createdAt).toLocaleDateString()}
+                            Ticket #${ticket.ticketNumber} | Created: ${new Date(ticket.createdAt).toLocaleDateString()}
                         </p>
                     </div>
-                    <span class="call-priority priority-${(call.priority || 'medium').toLowerCase()}">
-                        ${call.priority || 'MEDIUM'}
+                    <span class="call-priority priority-${(ticket.category || 'medium').toLowerCase()}">
+                        ${ticket.category || 'GENERAL'}
                     </span>
                     <div class="call-actions">
                         ${type === 'pending' ? `
-                            <button class="btn-action btn-start" onclick="startCall('${call.callId}')">
+                            <button class="btn-action btn-start" onclick="startTicket('${ticket.ticketNumber}')">
                                 <i class="fas fa-play"></i> Start
                             </button>
                         ` : ''}
                         ${type === 'progress' ? `
-                            <button class="btn-action btn-complete" onclick="openCompleteModal('${call.callId}')">
+                            <button class="btn-action btn-complete" onclick="openCompleteModal('${ticket.ticketNumber}')">
                                 <i class="fas fa-check"></i> Complete
                             </button>
                         ` : ''}
-                        <button class="btn-action btn-view" onclick="viewCall('${call.callId}')">
+                        <button class="btn-action btn-view" onclick="viewTicket('${ticket.ticketNumber}')">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
@@ -776,32 +789,32 @@
             `).join('');
         }
         
-        async function startCall(callId) {
+        async function startTicket(ticketNumber) {
             try {
-                const response = await fetch(`${API_BASE_URL}/calls/${callId}/status`, {
+                const response = await fetch(`${API_BASE_URL}/tickets/${ticketNumber}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${currentToken}`
                     },
-                    body: JSON.stringify({ status: 'IN_PROGRESS' })
+                    body: JSON.stringify({ status: 'IN_PROGRESS', notes: 'Started working on ticket' })
                 });
                 
                 const data = await response.json();
                 
                 if (data.success) {
-                    showAlert('Call started successfully', 'success');
+                    showAlert('Ticket started successfully', 'success');
                     loadDashboard();
                 } else {
-                    showAlert(data.message || 'Failed to start call', 'error');
+                    showAlert(data.message || 'Failed to start ticket', 'error');
                 }
             } catch (error) {
                 showAlert('Network error', 'error');
             }
         }
         
-        function openCompleteModal(callId) {
-            document.getElementById('completeCallId').value = callId;
+        function openCompleteModal(ticketNumber) {
+            document.getElementById('completeCallId').value = ticketNumber;
             document.getElementById('completeModal').classList.add('active');
         }
         
@@ -810,25 +823,24 @@
         }
         
         async function submitComplete() {
-            const callId = document.getElementById('completeCallId').value;
+            const ticketNumber = document.getElementById('completeCallId').value;
             const resolution = document.getElementById('resolution').value;
             const outcome = document.getElementById('outcome').value;
             const followUpRequired = document.getElementById('followUpRequired').checked;
             const followUpNotes = document.getElementById('followUpNotes').value;
             
             try {
-                const response = await fetch(`${API_BASE_URL}/calls/${callId}/status`, {
+                const notes = `Resolution: ${resolution}\nOutcome: ${outcome}\n${followUpRequired ? `Follow-up required: ${followUpNotes}` : 'No follow-up required'}`;
+                
+                const response = await fetch(`${API_BASE_URL}/tickets/${ticketNumber}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${currentToken}`
                     },
                     body: JSON.stringify({
-                        status: 'COMPLETED',
-                        resolution,
-                        outcome,
-                        followUpRequired,
-                        followUpNotes
+                        status: 'RESOLVED',
+                        notes: notes
                     })
                 });
                 
@@ -836,10 +848,10 @@
                 
                 if (data.success) {
                     closeModal('completeModal');
-                    showAlert('Call completed successfully', 'success');
+                    showAlert('Ticket completed successfully', 'success');
                     loadDashboard();
                 } else {
-                    showAlert(data.message || 'Failed to complete call', 'error');
+                    showAlert(data.message || 'Failed to complete ticket', 'error');
                 }
             } catch (error) {
                 showAlert('Network error', 'error');
@@ -851,8 +863,8 @@
                 this.checked ? 'block' : 'none';
         });
         
-        function viewCall(callId) {
-            alert('Call details: ' + callId);
+        function viewTicket(ticketNumber) {
+            alert('Ticket details: ' + ticketNumber);
         }
         
         function logout() {
