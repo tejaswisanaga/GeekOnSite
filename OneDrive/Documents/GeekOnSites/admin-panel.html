@@ -893,15 +893,22 @@
                 // Use tickets endpoint instead of calls
                 const url = `${API_BASE_URL}/tickets`;
                 
+                console.log('Loading tickets from:', url);
+                console.log('Using token:', currentToken ? 'Bearer ' + currentToken.substring(0, 20) + '...' : 'No token');
+                
                 const response = await fetch(url, {
                     headers: { 'Authorization': `Bearer ${currentToken}` }
                 });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
                 
                 const data = await response.json();
                 console.log('Tickets data:', data);
                 
                 if (data.success) {
                     let tickets = data.data || [];
+                    console.log('Loaded tickets:', tickets);
                     // Filter pending tickets if needed
                     if (pendingOnly) {
                         tickets = tickets.filter(t => t.status === 'OPEN' || t.status === 'PENDING');
