@@ -535,12 +535,19 @@
         
         async function fetchStats() {
             try {
+                console.log('Fetching stats from:', `${API_BASE_URL}/tickets`);
+                console.log('Using token:', currentToken ? 'Token exists' : 'No token');
+                
                 const response = await fetch(`${API_BASE_URL}/tickets`, {
                     headers: { 'Authorization': `Bearer ${currentToken}` }
                 });
                 
+                console.log('Stats response status:', response.status);
+                
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('Stats response data:', data);
+                    
                     if (data.success) {
                         const tickets = data.data || [];
                         const totalTickets = tickets.length;
@@ -552,7 +559,11 @@
                         document.getElementById('pendingCalls').textContent = openTickets;
                         document.getElementById('inProgressCalls').textContent = inProgressTickets;
                         document.getElementById('completedCalls').textContent = completedTickets;
+                    } else {
+                        console.error('Stats API error:', data.message);
                     }
+                } else {
+                    console.error('Stats API failed with status:', response.status);
                 }
             } catch (error) {
                 console.error('Error fetching stats:', error);
@@ -561,26 +572,52 @@
         
         async function fetchCalls(pendingOnly = false) {
             try {
+                console.log('Fetching calls from:', `${API_BASE_URL}/tickets`);
+                console.log('Pending only:', pendingOnly);
+                
                 const response = await fetch(`${API_BASE_URL}/tickets`, {
                     headers: { 'Authorization': `Bearer ${currentToken}` }
                 });
                 
+                console.log('Calls response status:', response.status);
+                
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('Calls response data:', data);
+                    
                     if (data.success) {
                         let tickets = data.data || [];
+                        console.log('Loaded tickets:', tickets);
+                        
                         if (pendingOnly) {
                             tickets = tickets.filter(t => t.status === 'OPEN' || t.status === 'PENDING');
+                            console.log('Filtered pending tickets:', tickets);
                         }
                         renderCallsTable(tickets);
+                    } else {
+                        console.error('Calls API error:', data.message);
+                        document.getElementById('callsTable').innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <p>Error: ${data.message}</p>
+                            </div>
+                        `;
                     }
+                } else {
+                    console.error('Calls API failed with status:', response.status);
+                    document.getElementById('callsTable').innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <p>API Error: ${response.status}</p>
+                        </div>
+                    `;
                 }
             } catch (error) {
                 console.error('Error fetching calls:', error);
                 document.getElementById('callsTable').innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-exclamation-circle"></i>
-                        <p>Error loading data</p>
+                        <p>Network error: ${error.message}</p>
                     </div>
                 `;
             }
