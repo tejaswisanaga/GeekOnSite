@@ -533,7 +533,7 @@
                 console.log('Fetching stats from:', `${API_BASE_URL}/tickets`);
                 console.log('Using token:', currentToken ? 'Token exists' : 'No token');
                 
-                const response = await fetch(`${API_BASE_URL}/public/tickets`);
+                const response = await fetch(`${API_BASE_URL}/tickets`);
                 
                 console.log('Stats response status:', response.status);
                 
@@ -568,7 +568,7 @@
                 console.log('Fetching calls from:', `${API_BASE_URL}/tickets`);
                 console.log('Pending only:', pendingOnly);
                 
-                const response = await fetch(`${API_BASE_URL}/public/tickets`);
+                const response = await fetch(`${API_BASE_URL}/tickets`);
                 
                 console.log('Calls response status:', response.status);
                 
