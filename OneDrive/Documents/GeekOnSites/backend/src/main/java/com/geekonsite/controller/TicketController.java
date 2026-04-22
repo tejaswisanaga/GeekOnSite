@@ -63,7 +63,7 @@ public class TicketController {
      * GET /api/tickets
      */
     @GetMapping
-    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    @PreAuthorize("hasRole('AGENT')")
     public ResponseEntity<?> getAllTickets() {
         List<SupportTicket> tickets = supportTicketRepository.findAll();
         return ResponseEntity.ok(ApiResponse.success("All tickets retrieved", tickets));
@@ -111,7 +111,7 @@ public class TicketController {
      * GET /api/tickets/{id}
      */
     @GetMapping("/{ticketNumber}")
-    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN', 'CUSTOMER')")
+    @PreAuthorize("hasAnyRole('AGENT', 'CUSTOMER')")
     public ResponseEntity<?> getTicketByNumber(@PathVariable String ticketNumber) {
         return ResponseEntity.ok(supportCallService.getTicketDetails(ticketNumber));
     }
@@ -121,7 +121,7 @@ public class TicketController {
      * PUT /api/tickets/{id}/status
      */
     @PutMapping("/{ticketNumber}/status")
-    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    @PreAuthorize("hasRole('AGENT')")
     public ResponseEntity<?> updateTicketStatus(
             @PathVariable String ticketNumber,
             @RequestBody Map<String, String> request) {
@@ -188,10 +188,11 @@ public class TicketController {
      * POST /api/tickets/{id}/assign
      */
     @PostMapping("/{ticketNumber}/assign")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('AGENT')")
     public ResponseEntity<?> assignTicket(
             @PathVariable String ticketNumber,
             @RequestBody Map<String, String> request) {
+        
         String agentId = request.get("agentId");
         String agentName = request.get("agentName");
         return ResponseEntity.ok(supportCallService.assignTicket(ticketNumber, agentId, agentName));
@@ -202,7 +203,7 @@ public class TicketController {
      * POST /api/tickets/{id}/notes
      */
     @PostMapping("/{ticketNumber}/notes")
-    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    @PreAuthorize("hasRole('AGENT')")
     public ResponseEntity<?> addNote(
             @PathVariable String ticketNumber,
             @RequestBody Map<String, String> request) {
@@ -229,7 +230,7 @@ public class TicketController {
      * GET /api/tickets/status/{status}
      */
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    @PreAuthorize("hasRole('AGENT')")
     public ResponseEntity<?> getTicketsByStatus(@PathVariable String status) {
         try {
             SupportTicket.TicketStatus ticketStatus = SupportTicket.TicketStatus.valueOf(status.toUpperCase());
@@ -238,26 +239,6 @@ public class TicketController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(ApiResponse.error("Invalid status"));
         }
-    }
-    
-    /**
-     * Delete/Close Ticket
-     * DELETE /api/tickets/{id}
-     */
-    @DeleteMapping("/{ticketNumber}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteTicket(@PathVariable String ticketNumber) {
-        java.util.Optional<SupportTicket> ticketOpt = supportTicketRepository.findByTicketNumber(ticketNumber);
-        if (ticketOpt.isEmpty()) {
-            return ResponseEntity.ok(ApiResponse.error("Ticket not found"));
-        }
-        
-        SupportTicket ticket = ticketOpt.get();
-        ticket.setStatus(SupportTicket.TicketStatus.CLOSED);
-        ticket.setUpdatedAt(LocalDateTime.now());
-        supportTicketRepository.save(ticket);
-        
-        return ResponseEntity.ok(ApiResponse.success("Ticket closed successfully", ticketNumber));
     }
     
     // Helper methods
