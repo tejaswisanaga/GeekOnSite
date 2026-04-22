@@ -76,23 +76,8 @@ public class WebSecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> 
                 auth
-                    .requestMatchers("/api/auth/**").permitAll()
-                    .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/api/public/**").permitAll()
-                    .requestMatchers("/api/support/call/initiate").permitAll()
-                    .requestMatchers("/api/support/ivr/options").permitAll()
-                    .requestMatchers("/api/support/call/ivr/select").permitAll()
-                    .requestMatchers("/api/support/call/troubleshoot").permitAll()
-                    .requestMatchers("/api/support/ticket/create").permitAll()
-                    .requestMatchers("/api/tickets").permitAll()
-                    .requestMatchers("/api/tickets/phone/**").permitAll()
-                    .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/api/agent/**").hasAnyRole("AGENT", "ADMIN")
-                    .anyRequest().authenticated()
-            )
-            .authenticationProvider(authenticationProvider());
-            // Temporarily disable JWT filter to test public endpoints
-            // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                    .anyRequest().permitAll()
+            );
         
         return http.build();
     }
