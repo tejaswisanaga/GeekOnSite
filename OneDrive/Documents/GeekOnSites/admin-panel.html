@@ -793,16 +793,48 @@
         
         async function loadDashboard() {
             try {
-                const response = await fetch(`${API_BASE_URL}/admin/dashboard`, {
+                // Load tickets instead of calls for stats
+                const ticketsResponse = await fetch(`${API_BASE_URL}/tickets`, {
                     headers: {
                         'Authorization': `Bearer ${currentToken}`
                     }
                 });
                 
-                const data = await response.json();
+                const ticketsData = await ticketsResponse.json();
                 
-                if (data.success) {
-                    updateStats(data.data);
+                if (ticketsData.success) {
+                    const tickets = ticketsData.data || [];
+                    const totalTickets = tickets.length;
+                    const openTickets = tickets.filter(t => t.status === 'OPEN').length;
+                    const inProgressTickets = tickets.filter(t => t.status === 'IN_PROGRESS').length;
+                    const completedTickets = tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED').length;
+                    
+                    // Load agents count
+                    const agentsResponse = await fetch(`${API_BASE_URL}/admin/agents`, {
+                        headers: {
+                            'Authorization': `Bearer ${currentToken}`
+                        }
+                    });
+                    const agentsData = await agentsResponse.json();
+                    const totalAgents = agentsData.success ? (agentsData.data || []).length : 0;
+                    
+                    // Load customers count
+                    const customersResponse = await fetch(`${API_BASE_URL}/admin/customers`, {
+                        headers: {
+                            'Authorization': `Bearer ${currentToken}`
+                        }
+                    });
+                    const customersData = await customersResponse.json();
+                    const totalCustomers = customersData.success ? (customersData.data || []).length : 0;
+                    
+                    updateStats({
+                        totalCalls: totalTickets,
+                        pendingCalls: openTickets,
+                        inProgressCalls: inProgressTickets,
+                        completedCalls: completedTickets,
+                        totalAgents: totalAgents,
+                        totalCustomers: totalCustomers
+                    });
                 }
             } catch (error) {
                 console.error('Error loading dashboard:', error);
