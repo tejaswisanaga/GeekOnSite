@@ -1042,12 +1042,14 @@
             currentTab = tab;
             
             // Update active nav
-            document.querySelectorAll('.nav-menu a').forEach(a => a.classList.remove('active'));
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
             event.target.classList.add('active');
             
             // Update page title
             const titles = {
-                'dashboard': 'Admin Dashboard',
+                'dashboard': 'Dashboard',
                 'calls': 'All Calls',
                 'pending-calls': 'Pending Calls',
                 'customers': 'All Customers',
@@ -1056,11 +1058,7 @@
             };
             document.getElementById('pageTitle').textContent = titles[tab];
             
-            // Show/hide views
-            document.getElementById('dashboardView').style.display = 
-                tab === 'dashboard' ? 'block' : 'none';
-            document.getElementById('tableView').style.display = 
-                tab !== 'dashboard' ? 'block' : 'none';
+            // Show/hide views - using tableContent for all tabs
             
             // Load data
             if (tab === 'dashboard') {
