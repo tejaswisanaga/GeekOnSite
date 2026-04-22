@@ -257,20 +257,37 @@
             document.getElementById('loading').style.display = 'block';
             document.getElementById('loginForm').style.display = 'none';
 
-            // Simple login - accept any credentials
+            // Admin credentials validation
+            const validCredentials = [
+                { username: 'admin', password: 'admin123' },
+                { username: 'administrator', password: 'password' },
+                { username: 'geekonsite', password: 'admin2024' }
+            ];
+
             setTimeout(() => {
-                // Store admin session
-                localStorage.setItem('adminToken', 'simple-admin-token-' + Date.now());
-                localStorage.setItem('adminInfo', JSON.stringify({
-                    username: username,
-                    loginTime: new Date().toISOString()
-                }));
+                const isValid = validCredentials.some(cred => 
+                    cred.username === username && cred.password === password
+                );
 
-                showAlert('Login successful! Redirecting...', 'success');
+                if (isValid) {
+                    // Store admin session
+                    localStorage.setItem('adminToken', 'admin-token-' + Date.now());
+                    localStorage.setItem('adminInfo', JSON.stringify({
+                        username: username,
+                        loginTime: new Date().toISOString()
+                    }));
 
-                setTimeout(() => {
-                    window.location.href = 'admin-panel.html';
-                }, 1000);
+                    showAlert('Login successful! Redirecting...', 'success');
+
+                    setTimeout(() => {
+                        window.location.href = 'admin-panel.html';
+                    }, 1000);
+                } else {
+                    showAlert('Invalid credentials. Please try again.', 'error');
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('loginForm').style.display = 'block';
+                    document.getElementById('password').value = '';
+                }
             }, 1000);
         }
 
