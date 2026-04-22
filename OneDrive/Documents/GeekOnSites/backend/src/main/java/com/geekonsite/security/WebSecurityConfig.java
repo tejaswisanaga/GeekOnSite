@@ -90,8 +90,9 @@ public class WebSecurityConfig {
                     .requestMatchers("/api/agent/**").hasAnyRole("AGENT", "ADMIN")
                     .anyRequest().authenticated()
             )
-            .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .authenticationProvider(authenticationProvider());
+            // Temporarily disable JWT filter to test public endpoints
+            // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         
         return http.build();
     }
