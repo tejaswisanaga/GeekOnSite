@@ -119,6 +119,7 @@
             position: absolute;
             bottom: 0;
             width: 100%;
+            background: #121212;
         }
         
         .btn-logout {
@@ -1241,13 +1242,13 @@ Created: ${new Date(ticket.createdAt).toLocaleString()}
             }
             
             try {
-                const response = await fetch(`${API_BASE_URL}/calls/assign`, {
+                const response = await fetch(`${API_BASE_URL}/tickets/${callId}/assign`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${currentToken}`
                     },
-                    body: JSON.stringify({ callId, agentId })
+                    body: JSON.stringify({ agentId })
                 });
                 
                 const data = await response.json();
@@ -1310,7 +1311,7 @@ Created: ${new Date(ticket.createdAt).toLocaleString()}
             if (!confirm('Are you sure you want to delete this call?')) return;
             
             try {
-                const response = await fetch(`${API_BASE_URL}/calls/${callId}`, {
+                const response = await fetch(`${API_BASE_URL}/tickets/${callId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${currentToken}` }
                 });
