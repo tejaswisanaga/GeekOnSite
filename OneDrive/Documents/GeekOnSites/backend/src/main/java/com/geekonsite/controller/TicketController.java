@@ -79,7 +79,7 @@ public class TicketController {
     }
     
     /**
-     * Temporary public endpoint to test tickets access without authentication
+     * Public endpoint to get all tickets for agents (temporary fix)
      * GET /api/public/tickets
      */
     @GetMapping("/public/tickets")

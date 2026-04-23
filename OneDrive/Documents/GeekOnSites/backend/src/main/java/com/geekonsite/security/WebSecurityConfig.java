@@ -54,6 +54,7 @@ public class WebSecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
             "https://geekonsite-3.onrender.com",
             "https://geekonsite.onrender.com",
+            "https://geekonsites.com", // Hostinger domain
             "*"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));

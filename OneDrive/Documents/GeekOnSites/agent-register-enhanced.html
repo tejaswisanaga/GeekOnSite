@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Registration - GeekOnSite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .register-container {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/homepage display 1.jpeg') center/cover no-repeat;
+            padding: 2rem 1rem;
+        }
+        
+        .register-box {
+            background: rgba(26, 26, 26, 0.95);
+            border: 2px solid var(--secondary-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .register-header h1 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .register-header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .verification-section {
+            background: rgba(51, 51, 51, 0.3);
+            border: 1px solid var(--secondary-color);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .verification-section h3 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .verification-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+        }
+        
+        .verification-status.pending {
+            background: rgba(255, 152, 0, 0.1);
+            border: 1px solid #ff9800;
+            color: #ff9800;
+        }
+        
+        .verification-status.verified {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid #4caf50;
+            color: #4caf50;
+        }
+        
+        .verification-status.failed {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid #f44336;
+            color: #f44336;
+        }
+        
+        .verification-input {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .verification-input input {
+            flex: 1;
+        }
+        
+        .verification-input button {
+            padding: 0.75rem 1.5rem;
+            background: var(--secondary-color);
+            color: var(--black);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .verification-input button:hover {
+            background: #b8941f;
+        }
+        
+        .verification-input button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        
+        .document-upload {
+            margin-bottom: 1rem;
+        }
+        
+        .document-upload label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        
+        .file-upload-area {
+            border: 2px dashed var(--secondary-color);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .file-upload-area:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .file-upload-area i {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .uploaded-file {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid #4caf50;
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .uploaded-file i {
+            color: #4caf50;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .verification-input {
+                flex-direction: column;
+            }
+            
+            .verification-input button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-box">
+            <a href="index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            
+            <div class="register-header">
+                <h1><i class="fas fa-user-tie"></i> Agent Registration</h1>
+                <p>Register with comprehensive verification for professional service access</p>
+            </div>
+            
+            <div id="alertBox" class="alert"></div>
+            
+            <form id="registerForm">
+                <!-- Personal Information -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required 
+                               placeholder="Enter first name">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required 
+                               placeholder="Enter last name">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required 
+                               placeholder="Enter email address">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required 
+                               placeholder="Enter phone number">
+                    </div>
+                </div>
+                
+                <!-- Address Information -->
+                <div class="form-group">
+                    <label for="address">Street Address *</label>
+                    <input type="text" id="address" name="address" required 
+                           placeholder="Enter street address">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City *</label>
+                        <input type="text" id="city" name="city" required 
+                               placeholder="Enter city">
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State *</label>
+                        <input type="text" id="state" name="state" required 
+                               placeholder="Enter state">
+                    </div>
+                    <div class="form-group">
+                        <label for="zipCode">ZIP Code *</label>
+                        <input type="text" id="zipCode" name="zipCode" required 
+                               placeholder="Enter ZIP code">
+                    </div>
+                </div>
+                
+                <!-- Professional Information -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="experience">Years of Experience *</label>
+                        <input type="number" id="experience" name="experience" required 
+                               placeholder="Years of experience" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="specialization">Specialization *</label>
+                        <select id="specialization" name="specialization" required>
+                            <option value="">Select specialization</option>
+                            <option value="computers">Computer Support</option>
+                            <option value="printers">Printer Support</option>
+                            <option value="networking">Network Setup</option>
+                            <option value="security">Security Systems</option>
+                            <option value="general">General IT Support</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Verification Section -->
+                <div class="verification-section">
+                    <h3><i class="fas fa-shield-alt"></i> Verification Requirements</h3>
+                    <p style="color: var(--text-light); margin-bottom: 1.5rem;">
+                        Submit one verification document for agent approval
+                    </p>
+                    
+                    <!-- Document Type Selection -->
+                    <div class="form-group">
+                        <label for="documentType">Select Verification Document Type *</label>
+                        <select id="documentType" name="documentType" required onchange="updateDocumentUpload()">
+                            <option value="">Select document type</option>
+                            <option value="email">Email Verification</option>
+                            <option value="phone">Phone Verification</option>
+                            <option value="id">Government ID (Passport/Driver's License/State ID)</option>
+                            <option value="address">Address Proof (Utility Bill/Bank Statement/Lease)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Email Verification -->
+                    <div class="verification-item" id="emailVerification" style="display: none;">
+                        <h4><i class="fas fa-envelope"></i> Email Verification</h4>
+                        <div class="verification-status pending" id="emailStatus">
+                            <i class="fas fa-clock"></i> Pending
+                        </div>
+                        <div class="verification-input">
+                            <input type="email" id="emailVerify" placeholder="Confirm your email address" required>
+                            <button type="button" onclick="sendEmailVerification()" id="emailVerifyBtn">
+                                Send Code
+                            </button>
+                        </div>
+                        <input type="text" id="emailCode" placeholder="Enter verification code" style="display: none;">
+                        <button type="button" onclick="verifyEmail()" id="emailConfirmBtn" style="display: none;">
+                            Verify Email
+                        </button>
+                    </div>
+                    
+                    <!-- Phone Verification -->
+                    <div class="verification-item" id="phoneVerification" style="display: none;">
+                        <h4><i class="fas fa-phone"></i> Phone Verification</h4>
+                        <div class="verification-status pending" id="phoneStatus">
+                            <i class="fas fa-clock"></i> Pending
+                        </div>
+                        <div class="verification-input">
+                            <input type="tel" id="phoneVerify" placeholder="Confirm your phone number" required>
+                            <button type="button" onclick="sendPhoneVerification()" id="phoneVerifyBtn">
+                                Send Code
+                            </button>
+                        </div>
+                        <input type="text" id="phoneCode" placeholder="Enter verification code" style="display: none;">
+                        <button type="button" onclick="verifyPhone()" id="phoneConfirmBtn" style="display: none;">
+                            Verify Phone
+                        </button>
+                    </div>
+                    
+                    <!-- ID Document Verification -->
+                    <div class="verification-item" id="idVerification" style="display: none;">
+                        <h4><i class="fas fa-id-card"></i> Government ID Verification</h4>
+                        <div class="verification-status pending" id="idStatus">
+                            <i class="fas fa-clock"></i> Pending
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="idDocumentType">Select ID Document Type *</label>
+                            <select id="idDocumentType" name="idDocumentType" required>
+                                <option value="">Select ID document type</option>
+                                <option value="passport">Passport</option>
+                                <option value="driver_license">Driver's License</option>
+                                <option value="ssn">Social Security Number (SSN)</option>
+                                <option value="state_id">State ID</option>
+                            </select>
+                        </div>
+                        
+                        <div id="ssnInput" style="display: none;">
+                            <div class="form-group">
+                                <label for="ssnNumber">SSN Number *</label>
+                                <input type="text" id="ssnNumber" name="ssnNumber" placeholder="Enter SSN (XXX-XX-XXXX)" maxlength="11">
+                            </div>
+                        </div>
+                        
+                        <div id="idDocumentUpload" style="display: none;">
+                            <div class="document-upload">
+                                <label id="uploadLabel">Upload Document</label>
+                                <div class="file-upload-area" onclick="document.getElementById('idDocument').click()">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload document</p>
+                                    <p style="font-size: 0.8rem; color: var(--text-light);">PDF, JPG, or PNG (Max 5MB)</p>
+                                </div>
+                                <input type="file" id="idDocument" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="uploadIDDocument(event)">
+                                <div id="idFilePreview"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Address Verification -->
+                    <div class="verification-item" id="addressVerification" style="display: none;">
+                        <h4><i class="fas fa-home"></i> Address Verification</h4>
+                        <div class="verification-status pending" id="addressStatus">
+                            <i class="fas fa-clock"></i> Pending
+                        </div>
+                        <div class="document-upload">
+                            <label>Upload Address Proof (Utility Bill, Bank Statement, or Lease Agreement)</label>
+                            <div class="file-upload-area" onclick="document.getElementById('addressDocument').click()">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click to upload address proof</p>
+                                <p style="font-size: 0.8rem; color: var(--text-light);">PDF, JPG, or PNG (Max 5MB)</p>
+                            </div>
+                            <input type="file" id="addressDocument" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="uploadAddressDocument(event)">
+                            <div id="addressFilePreview"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-register" id="submitBtn" disabled>
+                    <i class="fas fa-user-check"></i> Complete Registration
+                </button>
+            </form>
+            
+            <div class="portal-links">
+                <a href="agent-login.html">Agent Login</a>
+                <a href="customer-register.html">Customer Registration</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
+        
+        // Verification status tracking
+        let selectedVerificationType = null;
+        let verificationStatus = {
+            email: false,
+            phone: false,
+            id: false,
+            address: false
+        };
+        
+        // File data storage
+        let idDocumentFile = null;
+        let addressDocumentFile = null;
+        
+        // Update document upload based on selection
+        function updateDocumentUpload() {
+            const documentType = document.getElementById('documentType').value;
+            
+            // Hide all verification sections
+            document.getElementById('emailVerification').style.display = 'none';
+            document.getElementById('phoneVerification').style.display = 'none';
+            document.getElementById('idVerification').style.display = 'none';
+            document.getElementById('addressVerification').style.display = 'none';
+            
+            // Reset all verification statuses
+            verificationStatus = {
+                email: false,
+                phone: false,
+                id: false,
+                address: false
+            };
+            
+            // Show selected verification section
+            if (documentType) {
+                document.getElementById(documentType + 'Verification').style.display = 'block';
+                selectedVerificationType = documentType;
+            } else {
+                selectedVerificationType = null;
+            }
+            
+            // Update submit button
+            updateSubmitButton();
+        }
+        
+        // Update submit button based on verification
+        function updateSubmitButton() {
+            const documentType = document.getElementById('documentType').value;
+            const isVerified = documentType ? verificationStatus[documentType] : false;
+            document.getElementById('submitBtn').disabled = !documentType || !isVerified;
+        }
+        
+        // Email Verification
+        function sendEmailVerification() {
+            const email = document.getElementById('email').value;
+            const confirmEmail = document.getElementById('emailVerify').value;
+            
+            if (email !== confirmEmail) {
+                showAlert('Email addresses do not match', 'error');
+                return;
+            }
+            
+            // Simulate sending verification code
+            document.getElementById('emailVerifyBtn').disabled = true;
+            document.getElementById('emailVerifyBtn').textContent = 'Sending...';
+            
+            setTimeout(() => {
+                document.getElementById('emailCode').style.display = 'block';
+                document.getElementById('emailConfirmBtn').style.display = 'block';
+                document.getElementById('emailVerifyBtn').textContent = 'Code Sent';
+                showAlert('Verification code sent to your email', 'success');
+            }, 2000);
+        }
+        
+        function verifyEmail() {
+            const code = document.getElementById('emailCode').value;
+            
+            if (code.length < 6) {
+                showAlert('Please enter a valid verification code', 'error');
+                return;
+            }
+            
+            // Simulate verification (in real app, this would call API)
+            if (code === '123456') { // Demo code
+                verificationStatus.email = true;
+                updateVerificationStatus('email', 'verified');
+                updateSubmitButton();
+                showAlert('Email verified successfully!', 'success');
+            } else {
+                showAlert('Invalid verification code', 'error');
+            }
+        }
+        
+        // Phone Verification
+        function sendPhoneVerification() {
+            const phone = document.getElementById('phone').value;
+            const confirmPhone = document.getElementById('phoneVerify').value;
+            
+            if (phone !== confirmPhone) {
+                showAlert('Phone numbers do not match', 'error');
+                return;
+            }
+            
+            // Simulate sending verification code
+            document.getElementById('phoneVerifyBtn').disabled = true;
+            document.getElementById('phoneVerifyBtn').textContent = 'Sending...';
+            
+            setTimeout(() => {
+                document.getElementById('phoneCode').style.display = 'block';
+                document.getElementById('phoneConfirmBtn').style.display = 'block';
+                document.getElementById('phoneVerifyBtn').textContent = 'Code Sent';
+                showAlert('Verification code sent to your phone', 'success');
+            }, 2000);
+        }
+        
+        function verifyPhone() {
+            const code = document.getElementById('phoneCode').value;
+            
+            if (code.length < 6) {
+                showAlert('Please enter a valid verification code', 'error');
+                return;
+            }
+            
+            // Simulate verification (in real app, this would call API)
+            if (code === '654321') { // Demo code
+                verificationStatus.phone = true;
+                updateVerificationStatus('phone', 'verified');
+                updateSubmitButton();
+                showAlert('Phone verified successfully!', 'success');
+            } else {
+                showAlert('Invalid verification code', 'error');
+            }
+        }
+        
+        // ID Document Upload
+        function uploadIDDocument(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (file.size > 5 * 1024 * 1024) {
+                showAlert('File size must be less than 5MB', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                idDocumentFile = {
+                    name: file.name,
+                    type: file.type,
+                    data: e.target.result
+                };
+                
+                document.getElementById('idFilePreview').innerHTML = `
+                    <div class="uploaded-file">
+                        <span><i class="fas fa-file"></i> ${file.name}</span>
+                        <button type="button" onclick="removeIDDocument()"><i class="fas fa-times"></i></button>
+                    </div>
+                `;
+                
+                verificationStatus.id = true;
+                updateVerificationStatus('id', 'verified');
+                updateSubmitButton();
+                showAlert('ID document uploaded successfully', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // SSN Verification
+        function verifySSN() {
+            const ssnNumber = document.getElementById('ssnNumber').value;
+            
+            if (ssnNumber.length < 11) {
+                showAlert('Please enter a valid SSN', 'error');
+                return;
+            }
+            
+            // Simulate SSN verification (in real app, this would validate format and potentially verify with database)
+            verificationStatus.id = true;
+            updateVerificationStatus('id', 'verified');
+            updateSubmitButton();
+            showAlert('SSN verified successfully', 'success');
+        }
+        
+        function removeIDDocument() {
+            idDocumentFile = null;
+            document.getElementById('idFilePreview').innerHTML = '';
+            document.getElementById('idDocument').value = '';
+            
+            verificationStatus.id = false;
+            updateVerificationStatus('id', 'pending');
+            updateProgress();
+        }
+        
+        // Address Document Upload
+        function uploadAddressDocument(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (file.size > 5 * 1024 * 1024) {
+                showAlert('File size must be less than 5MB', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                addressDocumentFile = {
+                    name: file.name,
+                    type: file.type,
+                    data: e.target.result
+                };
+                
+                document.getElementById('addressFilePreview').innerHTML = `
+                    <div class="uploaded-file">
+                        <span><i class="fas fa-file"></i> ${file.name}</span>
+                        <button type="button" onclick="removeAddressDocument()"><i class="fas fa-times"></i></button>
+                    </div>
+                `;
+                
+                verificationStatus.address = true;
+                updateVerificationStatus('address', 'verified');
+                updateSubmitButton();
+                showAlert('Address document uploaded successfully', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function removeAddressDocument() {
+            addressDocumentFile = null;
+            document.getElementById('addressFilePreview').innerHTML = '';
+            document.getElementById('addressDocument').value = '';
+            
+            verificationStatus.address = false;
+            updateVerificationStatus('address', 'pending');
+            updateProgress();
+        }
+        
+        // Update verification status display
+        function updateVerificationStatus(type, status) {
+            const statusElement = document.getElementById(type + 'Status');
+            statusElement.className = 'verification-status ' + status;
+            
+            if (status === 'verified') {
+                statusElement.innerHTML = '<i class="fas fa-check-circle"></i> Verified';
+            } else if (status === 'failed') {
+                statusElement.innerHTML = '<i class="fas fa-times-circle"></i> Failed';
+            } else {
+                statusElement.innerHTML = '<i class="fas fa-clock"></i> Pending';
+            }
+        }
+        
+        // Form submission
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const documentType = document.getElementById('documentType').value;
+            if (!documentType) {
+                showAlert('Please select a verification document type', 'error');
+                return;
+            }
+            
+            const isVerified = verificationStatus[documentType];
+            if (!isVerified) {
+                showAlert('Please complete the verification process', 'error');
+                return;
+            }
+            
+            const formData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                address: document.getElementById('address').value,
+                city: document.getElementById('city').value,
+                state: document.getElementById('state').value,
+                zipCode: document.getElementById('zipCode').value,
+                experience: document.getElementById('experience').value,
+                specialization: document.getElementById('specialization').value,
+                verificationType: documentType,
+                verificationDocument: getVerificationDocument(documentType)
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/agent/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert('Registration submitted! Your application is under review.', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'agent-login.html';
+                    }, 3000);
+                } else {
+                    showAlert(data.message || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                showAlert('Network error. Please try again.', 'error');
+            }
+        });
+        
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = 'alert ' + type;
+            alertBox.style.display = 'block';
+            
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Auto-fill verification fields when main fields change
+        document.getElementById('email').addEventListener('input', (e) => {
+            document.getElementById('emailVerify').value = e.target.value;
+        });
+        
+        document.getElementById('phone').addEventListener('input', (e) => {
+            document.getElementById('phoneVerify').value = e.target.value;
+        });
+        
+        // Add event listener for ID document type selection
+        document.getElementById('idDocumentType').addEventListener('change', handleIDDocumentType);
+        
+        // Add event listener for SSN input with formatting
+        document.getElementById('ssnNumber').addEventListener('input', (e) => {
+            formatSSN(e.target);
+            // Auto-verify when SSN is complete
+            if (e.target.value.length === 11) {
+                verifySSN();
+            }
+        });
+        
+        // Handle ID document type selection
+        function handleIDDocumentType() {
+            const idType = document.getElementById('idDocumentType').value;
+            const ssnInput = document.getElementById('ssnInput');
+            const idUpload = document.getElementById('idDocumentUpload');
+            const uploadLabel = document.getElementById('uploadLabel');
+            
+            // Hide both sections initially
+            ssnInput.style.display = 'none';
+            idUpload.style.display = 'none';
+            
+            if (idType === 'ssn') {
+                ssnInput.style.display = 'block';
+            } else if (idType) {
+                idUpload.style.display = 'block';
+                // Update upload label based on document type
+                const labels = {
+                    'passport': 'Upload Passport',
+                    'driver_license': 'Upload Driver\'s License',
+                    'state_id': 'Upload State ID'
+                };
+                uploadLabel.textContent = labels[idType] || 'Upload Document';
+            }
+        }
+        
+        // Format SSN input
+        function formatSSN(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length >= 6) {
+                value = value.slice(0, 3) + '-' + value.slice(3, 5) + '-' + value.slice(5, 9);
+            } else if (value.length >= 4) {
+                value = value.slice(0, 3) + '-' + value.slice(3);
+            }
+            input.value = value;
+        }
+        
+        // Get verification document based on type
+        function getVerificationDocument(type) {
+            switch(type) {
+                case 'email':
+                case 'phone':
+                    return { type: type, verified: true };
+                case 'id':
+                    const idType = document.getElementById('idDocumentType').value;
+                    if (idType === 'ssn') {
+                        return { 
+                            type: 'SSN', 
+                            ssnNumber: document.getElementById('ssnNumber').value,
+                            verified: true 
+                        };
+                    } else {
+                        return { 
+                            type: 'ID_DOCUMENT', 
+                            documentType: idType,
+                            file: idDocumentFile 
+                        };
+                    }
+                case 'address':
+                    return { type: 'ADDRESS_PROOF', file: addressDocumentFile };
+                default:
+                    return null;
+            }
+        }
+        
+        // Initialize
+        updateSubmitButton();
+    </script>
+</body>
+</html>

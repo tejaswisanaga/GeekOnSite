@@ -290,7 +290,7 @@
             
             <div class="register-header">
                 <h1><i class="fas fa-user-plus"></i> Customer Registration</h1>
-                <p>Register with verification documents for service access</p>
+                <p>Register instantly for immediate service access</p>
             </div>
             
             <div id="alertBox" class="alert"></div>
@@ -343,19 +343,7 @@
                     </div>
                 </div>
                 
-                <div class="documents-section">
-                    <h3><i class="fas fa-id-card"></i> Verification Documents</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem;">
-                        Please provide at least one verification document (Passport, Driver's License, State ID, or SSN)
-                    </p>
-                    
-                    <div id="documentsList"></div>
-                    
-                    <button type="button" class="btn-add-document" onclick="addDocumentField()">
-                        <i class="fas fa-plus"></i> Add Verification Document
-                    </button>
-                </div>
-                
+                                
                 <button type="submit" class="btn-register">
                     <i class="fas fa-user-check"></i> Register Customer
                 </button>
@@ -370,92 +358,9 @@
     
     <script>
         const API_BASE_URL = 'http://localhost:8080/api';
-        let documentCount = 0;
-        
-        function addDocumentField() {
-            const container = document.getElementById('documentsList');
-            const docId = `doc-${Date.now()}`;
-            documentCount++;
-            
-            const docHtml = `
-                <div class="document-item" id="${docId}">
-                    <div class="document-header">
-                        <span class="document-type-badge">Document ${documentCount}</span>
-                        <button type="button" class="btn-remove" onclick="removeDocument('${docId}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                    <div class="document-select">
-                        <select class="doc-type" required>
-                            <option value="">Select Document Type</option>
-                            <option value="PASSPORT">Passport</option>
-                            <option value="DRIVERS_LICENSE">Driver's License</option>
-                            <option value="STATE_ID">State ID</option>
-                            <option value="SSN">SSN Card</option>
-                        </select>
-                        <input type="text" class="doc-number" placeholder="Document Number" required>
-                    </div>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="file-${docId}" accept=".pdf,.jpg,.jpeg,.png" 
-                               onchange="handleFileSelect(this, '${docId}')">
-                        <label for="file-${docId}" class="file-input-label">
-                            <i class="fas fa-cloud-upload-alt"></i> 
-                            <span>Choose file (PDF, JPG, PNG)</span>
-                        </label>
-                    </div>
-                    <div class="file-name" id="filename-${docId}"></div>
-                    <input type="hidden" class="file-data" id="filedata-${docId}">
-                    <input type="hidden" class="file-name-hidden" id="filenamehidden-${docId}">
-                </div>
-            `;
-            
-            container.insertAdjacentHTML('beforeend', docHtml);
-        }
-        
-        function removeDocument(docId) {
-            document.getElementById(docId).remove();
-        }
-        
-        function handleFileSelect(input, docId) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64Data = e.target.result.split(',')[1];
-                    document.getElementById(`filedata-${docId}`).value = base64Data;
-                    document.getElementById(`filenamehidden-${docId}`).value = file.name;
-                    document.getElementById(`filename-${docId}`).textContent = file.name;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
         
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            const documentItems = document.querySelectorAll('.document-item');
-            const verificationDocuments = [];
-            
-            documentItems.forEach(item => {
-                const docType = item.querySelector('.doc-type').value;
-                const docNumber = item.querySelector('.doc-number').value;
-                const fileData = item.querySelector('.file-data').value;
-                const fileName = item.querySelector('.file-name-hidden').value;
-                
-                if (docType && docNumber) {
-                    verificationDocuments.push({
-                        documentType: docType,
-                        documentNumber: docNumber,
-                        documentFileBase64: fileData,
-                        documentFileName: fileName
-                    });
-                }
-            });
-            
-            if (verificationDocuments.length === 0) {
-                showAlert('Please add at least one verification document', 'error');
-                return;
-            }
             
             const formData = {
                 firstName: document.getElementById('firstName').value,
@@ -465,8 +370,7 @@
                 address: document.getElementById('address').value,
                 city: document.getElementById('city').value,
                 state: document.getElementById('state').value,
-                zipCode: document.getElementById('zipCode').value,
-                verificationDocuments: verificationDocuments
+                zipCode: document.getElementById('zipCode').value
             };
             
             try {
@@ -481,10 +385,8 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    showAlert('Registration successful! Your account is pending verification.', 'success');
+                    showAlert('Registration successful! You can now book services immediately.', 'success');
                     document.getElementById('registerForm').reset();
-                    document.getElementById('documentsList').innerHTML = '';
-                    documentCount = 0;
                 } else {
                     showAlert(data.message || 'Registration failed', 'error');
                 }
@@ -499,9 +401,6 @@
             alertBox.textContent = message;
             alertBox.style.display = 'block';
         }
-        
-        // Add first document field by default
-        addDocumentField();
     </script>
 </body>
 </html>

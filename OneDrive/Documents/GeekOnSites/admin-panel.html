@@ -438,14 +438,15 @@
                 <span class="close" onclick="closeAssignModal()">&times;</span>
             </div>
             <div class="modal-body">
-                <p><strong>Ticket #:</strong> <span id="modalTicketNumber"></span></p>
                 <div class="form-group">
-                    <label for="agentId">Agent ID</label>
-                    <input type="text" id="agentId" placeholder="Enter agent ID">
+                    <label for="modalTicketNumber">Ticket Number:</label>
+                    <input type="text" id="modalTicketNumber" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="agentName">Agent Name</label>
-                    <input type="text" id="agentName" placeholder="Enter agent name">
+                    <label for="agentSelect">Select Agent:</label>
+                    <select id="agentSelect" required>
+                        <option value="">Loading agents...</option>
+                    </select>
                 </div>
                 <div style="display: flex; gap: 10px; margin-top: 20px;">
                     <button class="btn btn-primary" onclick="assignAgent(document.getElementById('modalTicketNumber').textContent)">
@@ -681,14 +682,34 @@
 
         function openAssignModal(ticketNumber) {
             const modal = document.getElementById('assignModal');
-            const ticketNumberSpan = document.getElementById('modalTicketNumber');
-            const agentIdInput = document.getElementById('agentId');
-            const agentNameInput = document.getElementById('agentName');
-            
-            ticketNumberSpan.textContent = ticketNumber;
+            document.getElementById('modalTicketNumber').textContent = ticketNumber;
             modal.style.display = 'block';
-            agentIdInput.value = '';
-            agentNameInput.value = '';
+            loadAgents();
+        }
+
+        function loadAgents() {
+            const agentSelect = document.getElementById('agentSelect');
+            agentSelect.innerHTML = '<option value="">Loading agents...</option>';
+            
+            fetch(`${API_BASE_URL}/agent/list`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.data) {
+                        agentSelect.innerHTML = '<option value="">Select an agent...</option>';
+                        data.data.forEach(agent => {
+                            const option = document.createElement('option');
+                            option.value = agent.agentId;
+                            option.textContent = `${agent.firstName} ${agent.lastName} (${agent.agentId})`;
+                            agentSelect.appendChild(option);
+                        });
+                    } else {
+                        agentSelect.innerHTML = '<option value="">No agents available</option>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading agents:', error);
+                    agentSelect.innerHTML = '<option value="">Error loading agents</option>';
+                });
             agentIdInput.focus();
         }
 
@@ -698,13 +719,16 @@
         }
 
         function assignAgent(ticketNumber) {
-            const agentId = document.getElementById('agentId').value;
-            const agentName = document.getElementById('agentName').value;
+            const agentSelect = document.getElementById('agentSelect');
+            const selectedOption = agentSelect.options[agentSelect.selectedIndex];
             
-            if (!agentId || !agentName) {
-                showAlert('Please enter both Agent ID and Name', 'error');
+            if (!selectedOption.value) {
+                showAlert('Please select an agent', 'error');
                 return;
             }
+            
+            const agentId = selectedOption.value;
+            const agentName = selectedOption.textContent;
 
             fetch(`${API_BASE_URL}/admin/tickets/${ticketNumber}/assign`, {
                 method: 'PUT',

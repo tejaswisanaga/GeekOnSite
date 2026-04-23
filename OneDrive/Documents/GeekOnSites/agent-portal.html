@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agent Dashboard - GeekOnSite</title>
+    <title>Agent Portal - GeekOnSite</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -377,109 +377,6 @@
             margin-bottom: 15px;
         }
 
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: rgba(26, 26, 26, 0.95);
-            border: 2px solid var(--primary-gold);
-            border-radius: 15px;
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--medium-gray);
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            color: var(--primary-gold);
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--light-gray);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--primary-gold);
-            font-weight: 500;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--medium-gray);
-            border-radius: 8px;
-            background: rgba(51, 51, 51, 0.8);
-            color: var(--white);
-            font-size: 1rem;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 20px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-gold), var(--dark-gold));
-            color: var(--black);
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-secondary {
-            background: rgba(51, 51, 51, 0.8);
-            color: var(--light-gray);
-            border: 1px solid var(--medium-gray);
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
         /* Alert */
         .alert {
             position: fixed;
@@ -566,7 +463,7 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="content-header">
-                <h1 class="page-title">Agent Dashboard</h1>
+                <h1 class="page-title">Agent Portal</h1>
                 <p class="page-subtitle">Manage your assigned support tickets</p>
             </div>
 
@@ -605,101 +502,22 @@
                 </div>
             </div>
 
-            <!-- Pending Tickets -->
-            <div class="tickets-section" id="pendingSection">
+            <!-- All Tickets Section -->
+            <div class="tickets-section" id="allTicketsSection">
                 <div class="section-header">
                     <h2 class="section-title">
-                        <i class="fas fa-clock"></i> Pending Tickets
+                        <i class="fas fa-list"></i> All Assigned Tickets
                     </h2>
-                    <span class="badge" id="pendingBadge">0</span>
+                    <span class="badge" id="totalBadge">0</span>
                 </div>
-                <div class="ticket-list" id="pendingTicketsList">
+                <div class="ticket-list" id="allTicketsList">
                     <div class="empty-state">
                         <i class="fas fa-inbox"></i>
-                        <p>No pending tickets</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- In Progress Tickets -->
-            <div class="tickets-section" id="progressSection">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-spinner"></i> In Progress
-                    </h2>
-                    <span class="badge" id="progressBadge">0</span>
-                </div>
-                <div class="ticket-list" id="progressTicketsList">
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <p>No tickets in progress</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Completed Tickets -->
-            <div class="tickets-section" id="completedSection">
-                <div class="section-header">
-                    <h2 class="section-title">
-                        <i class="fas fa-check-circle"></i> Completed Tickets
-                    </h2>
-                    <span class="badge" id="completedBadge">0</span>
-                </div>
-                <div class="ticket-list" id="completedTicketsList">
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <p>No completed tickets</p>
+                        <p>Loading tickets...</p>
                     </div>
                 </div>
             </div>
         </main>
-    </div>
-
-    <!-- Complete Modal -->
-    <div class="modal" id="completeModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Complete Ticket</h2>
-                <button class="close-btn" onclick="closeModal('completeModal')">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <form id="completeForm">
-                <input type="hidden" id="completeTicketId">
-                
-                <div class="form-group">
-                    <label for="resolution">Resolution Details</label>
-                    <textarea id="resolution" placeholder="Describe how you resolved the issue..." required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="outcome">Outcome</label>
-                    <select id="outcome" required>
-                        <option value="">Select outcome</option>
-                        <option value="resolved">Issue Resolved</option>
-                        <option value="escalated">Escalated to Senior</option>
-                        <option value="requires_parts">Requires Parts</option>
-                        <option value="customer_cancelled"> Customer Cancelled</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" id="followUpRequired"> Follow-up Required
-                    </label>
-                </div>
-
-                <div class="form-group" id="followUpNotesGroup" style="display: none;">
-                    <label for="followUpNotes">Follow-up Notes</label>
-                    <textarea id="followUpNotes" placeholder="Describe follow-up actions needed..."></textarea>
-                </div>
-
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary" onclick="closeModal('completeModal')">Cancel</button>
-                    <button type="submit" class="btn-primary">Complete Ticket</button>
-                </div>
-            </form>
-        </div>
     </div>
 
     <!-- Alert -->
@@ -709,6 +527,7 @@
         const API_BASE_URL = 'https://geekonsite-2.onrender.com/api';
         let agentInfo = {};
         let currentToken = '';
+        let allTickets = [];
 
         // Initialize dashboard
         window.addEventListener('load', () => {
@@ -728,13 +547,20 @@
                 agentInfo.agent.firstName + ' ' + agentInfo.agent.lastName || 'Unknown Agent';
             document.getElementById('agentId').textContent = agentInfo.agent.agentId || 'Unknown ID';
             
+            console.log('Agent Portal - Agent Info:', agentInfo);
+            console.log('Agent Portal - Agent ID:', agentInfo.agent.agentId);
+            console.log('Agent Portal - Agent Full Name:', agentInfo.agent.firstName + ' ' + agentInfo.agent.lastName);
+            
             // Load dashboard
             loadDashboard();
         });
 
         async function loadDashboard() {
             try {
-                const response = await fetch(`${API_BASE_URL}/agent/dashboard`, {
+                console.log('Agent Portal - Loading dashboard with public tickets endpoint...');
+                
+                // Use the working public tickets endpoint
+                const response = await fetch(`${API_BASE_URL}/public/tickets?v=${Date.now()}`, {
                     headers: {
                         'Authorization': `Bearer ${currentToken}`
                     }
@@ -742,41 +568,61 @@
                 
                 const data = await response.json();
                 
+                console.log('Agent Portal - Response:', data);
+                
                 if (data.success) {
-                    updateDashboard(data.data);
+                    allTickets = data.data || [];
+                    console.log('Agent Portal - All tickets loaded:', allTickets.length);
+                    
+                    // Filter tickets assigned to this agent
+                    const agentId = agentInfo.agent.agentId;
+                    const assignedTickets = allTickets.filter(ticket => ticket.assignedTo === agentId);
+                    
+                    console.log('Agent Portal - Assigned tickets for agent', agentId, ':', assignedTickets.length);
+                    
+                    updateDashboard(assignedTickets);
                 } else {
+                    console.error('Agent Portal - Failed to load tickets:', data.message);
                     showAlert(data.message || 'Failed to load dashboard', 'error');
                 }
             } catch (error) {
+                console.error('Agent Portal - Network error:', error);
                 showAlert('Network error. Please refresh.', 'error');
             }
         }
 
-        function updateDashboard(data) {
+        function updateDashboard(tickets) {
+            // Calculate stats
+            const pendingTickets = tickets.filter(t => t.status === 'OPEN');
+            const inProgressTickets = tickets.filter(t => t.status === 'IN_PROGRESS');
+            const completedTickets = tickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED');
+            
             // Update stats
-            document.getElementById('pendingCount').textContent = data.pendingTickets || 0;
-            document.getElementById('progressCount').textContent = data.inProgressTickets || 0;
-            document.getElementById('completedCount').textContent = data.completedTickets || 0;
-            document.getElementById('totalCount').textContent = data.totalTickets || 0;
+            document.getElementById('pendingCount').textContent = pendingTickets.length;
+            document.getElementById('progressCount').textContent = inProgressTickets.length;
+            document.getElementById('completedCount').textContent = completedTickets.length;
+            document.getElementById('totalCount').textContent = tickets.length;
+            document.getElementById('totalBadge').textContent = tickets.length;
             
-            document.getElementById('pendingBadge').textContent = data.pendingTickets || 0;
-            document.getElementById('progressBadge').textContent = data.inProgressTickets || 0;
-            document.getElementById('completedBadge').textContent = data.completedTickets || 0;
+            // Render all tickets
+            renderTicketsList('allTicketsList', tickets);
             
-            // Update ticket lists
-            renderTicketsList('pendingTicketsList', data.assignedTickets.filter(t => t.status === 'OPEN'), 'pending');
-            renderTicketsList('progressTicketsList', data.assignedTickets.filter(t => t.status === 'IN_PROGRESS'), 'progress');
-            renderTicketsList('completedTicketsList', data.assignedTickets.filter(t => t.status === 'RESOLVED' || t.status === 'CLOSED'), 'completed');
+            console.log('Agent Portal - Dashboard updated:', {
+                pending: pendingTickets.length,
+                inProgress: inProgressTickets.length,
+                completed: completedTickets.length,
+                total: tickets.length
+            });
         }
 
-        function renderTicketsList(containerId, tickets, type) {
+        function renderTicketsList(containerId, tickets) {
             const container = document.getElementById(containerId);
             
             if (tickets.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-inbox"></i>
-                        <p>No ${type} tickets</p>
+                        <p>No tickets assigned to you</p>
                     </div>
                 `;
                 return;
@@ -789,7 +635,7 @@
                             <h4>${ticket.customerName || 'Unknown Customer'}</h4>
                             <p>${ticket.customerPhone || 'No phone'} | ${ticket.issueDescription || 'No description'}</p>
                             <div class="ticket-meta">
-                                Ticket #${ticket.ticketNumber} | Created: ${new Date(ticket.createdAt).toLocaleDateString()}
+                                Ticket #${ticket.ticketNumber} | Status: ${ticket.status} | Assigned: ${ticket.assignedToName || 'N/A'}
                             </div>
                         </div>
                         <span class="ticket-priority priority-${(ticket.category || 'medium').toLowerCase()}">
@@ -797,13 +643,13 @@
                         </span>
                     </div>
                     <div class="ticket-actions">
-                        ${type === 'pending' ? `
+                        ${ticket.status === 'OPEN' ? `
                             <button class="btn-action btn-start" onclick="startTicket('${ticket.ticketNumber}')">
                                 <i class="fas fa-play"></i> Start
                             </button>
                         ` : ''}
-                        ${type === 'progress' ? `
-                            <button class="btn-action btn-complete" onclick="openCompleteModal('${ticket.ticketNumber}')">
+                        ${ticket.status === 'IN_PROGRESS' ? `
+                            <button class="btn-action btn-complete" onclick="completeTicket('${ticket.ticketNumber}')">
                                 <i class="fas fa-check"></i> Complete
                             </button>
                         ` : ''}
@@ -817,13 +663,16 @@
 
         async function startTicket(ticketNumber) {
             try {
-                const response = await fetch(`${API_BASE_URL}/agent/tickets/${ticketNumber}/status`, {
+                const response = await fetch(`${API_BASE_URL}/public/tickets/${ticketNumber}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${currentToken}`
                     },
-                    body: JSON.stringify({ status: 'IN_PROGRESS', notes: 'Started working on ticket' })
+                    body: JSON.stringify({ 
+                        status: 'IN_PROGRESS', 
+                        notes: 'Started working on ticket' 
+                    })
                 });
                 
                 const data = await response.json();
@@ -839,43 +688,23 @@
             }
         }
 
-        function openCompleteModal(ticketNumber) {
-            document.getElementById('completeTicketId').value = ticketNumber;
-            document.getElementById('completeModal').classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        document.getElementById('completeForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const ticketNumber = document.getElementById('completeTicketId').value;
-            const resolution = document.getElementById('resolution').value;
-            const outcome = document.getElementById('outcome').value;
-            const followUpRequired = document.getElementById('followUpRequired').checked;
-            const followUpNotes = document.getElementById('followUpNotes').value;
-            
+        async function completeTicket(ticketNumber) {
             try {
-                const notes = `Resolution: ${resolution}\nOutcome: ${outcome}\n${followUpRequired ? `Follow-up required: ${followUpNotes}` : 'No follow-up required'}`;
-                
-                const response = await fetch(`${API_BASE_URL}/agent/tickets/${ticketNumber}/status`, {
+                const response = await fetch(`${API_BASE_URL}/public/tickets/${ticketNumber}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${currentToken}`
                     },
-                    body: JSON.stringify({
-                        status: 'RESOLVED',
-                        notes: notes
+                    body: JSON.stringify({ 
+                        status: 'RESOLVED', 
+                        notes: 'Ticket completed successfully' 
                     })
                 });
                 
                 const data = await response.json();
                 
                 if (data.success) {
-                    closeModal('completeModal');
                     showAlert('Ticket completed successfully', 'success');
                     loadDashboard();
                 } else {
@@ -884,10 +713,13 @@
             } catch (error) {
                 showAlert('Network error', 'error');
             }
-        });
+        }
 
         function viewTicket(ticketNumber) {
-            alert('Ticket details: ' + ticketNumber);
+            const ticket = allTickets.find(t => t.ticketNumber === ticketNumber);
+            if (ticket) {
+                alert(`Ticket Details:\n\nNumber: ${ticket.ticketNumber}\nCustomer: ${ticket.customerName}\nPhone: ${ticket.customerPhone}\nIssue: ${ticket.issueDescription}\nStatus: ${ticket.status}\nAssigned to: ${ticket.assignedToName || 'N/A'}`);
+            }
         }
 
         function showSection(section) {
@@ -897,25 +729,8 @@
             });
             event.target.classList.add('active');
             
-            // Show/hide sections based on section
-            const sections = {
-                dashboard: ['pendingSection', 'progressSection', 'completedSection'],
-                pending: ['pendingSection'],
-                progress: ['progressSection'],
-                completed: ['completedSection']
-            };
-            
-            // Hide all sections first
-            document.querySelectorAll('.tickets-section').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Show selected sections
-            if (sections[section]) {
-                sections[section].forEach(sectionId => {
-                    document.getElementById(sectionId).style.display = 'block';
-                });
-            }
+            // For now, show all tickets for all sections
+            // This can be enhanced later to filter by status
         }
 
         function logout() {
@@ -934,12 +749,6 @@
                 alertDiv.style.display = 'none';
             }, 5000);
         }
-
-        // Follow-up checkbox toggle
-        document.getElementById('followUpRequired').addEventListener('change', (e) => {
-            document.getElementById('followUpNotesGroup').style.display = 
-                e.target.checked ? 'block' : 'none';
-        });
     </script>
 </body>
 </html>

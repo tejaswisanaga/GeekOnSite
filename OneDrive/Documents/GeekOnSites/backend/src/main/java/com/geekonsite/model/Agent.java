@@ -32,6 +32,29 @@ public class Agent {
     
     private String phone;
     
+    private String address;
+    
+    private String city;
+    
+    private String state;
+    
+    private String zipCode;
+    
+    private String experience;
+    
+    private String specialization;
+    
+    // Verification fields
+    private boolean emailVerified;
+    
+    private boolean phoneVerified;
+    
+    private boolean idVerified;
+    
+    private boolean addressVerified;
+    
+    private String verificationStatus;
+    
     private boolean active;
     
     private LocalDateTime createdAt;
